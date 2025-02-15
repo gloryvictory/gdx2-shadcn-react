@@ -1,13 +1,21 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Vite",
+  name: "Отчеты",
   description:
-    "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    "Сервис по отчетам ЗапСибНИИГГ",
   mainNav: [
     {
-      title: "Home",
-      href: "/",
+      title: "Статистика",
+      href: "/stat",
+    },
+    {
+      title: "Поиск",
+      href: "/search",
+    },
+    {
+      title: "Карта",
+      href: "/map",
     },
   ],
   links: {

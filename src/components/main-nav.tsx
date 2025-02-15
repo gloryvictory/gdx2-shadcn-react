@@ -1,7 +1,7 @@
 import { Icons } from "@/components/icons"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
-import { NavItem } from "@/types/nav"
+import { NavItem } from "@/types/models"
 import { Link } from "react-router-dom"
 
 interface MainNavProps {
@@ -10,13 +10,13 @@ interface MainNavProps {
 
 export function MainNav({ items }: MainNavProps) {
   return (
-    <div className="flex gap-6 md:gap-10">
+    <div className="flex gap-6 md:gap-10 ">
       <Link to="/" className="flex items-center space-x-2">
         <Icons.logo className="h-6 w-6" />
         <span className="inline-block font-bold">{siteConfig.name}</span>
       </Link>
       {items?.length ? (
-        <nav className="flex gap-6">
+        <nav className="flex gap-6 ">
           {items?.map(
             (item, index) =>
               item.href && (
@@ -24,7 +24,7 @@ export function MainNav({ items }: MainNavProps) {
                   key={index}
                   to={item.href}
                   className={cn(
-                    "flex items-center text-sm font-medium text-muted-foreground",
+                    "flex items-center text-sm font-medium text-muted-foreground hover:text-slate-950",
                     item.disabled && "cursor-not-allowed opacity-80",
                   )}
                 >
