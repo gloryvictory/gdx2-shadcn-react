@@ -1,3 +1,4 @@
+import MapComponent from "./components/map/sta/rgf/page";
 import DataTableAreaoil from "./components/table/areaoil/table-areaoil";
 import DataTableAuthor from "./components/table/author/table-author";
 import DataTableField from "./components/table/field/table-field";
@@ -19,6 +20,7 @@ export const routes = [
     { path: "/stat", element: <PageStat /> },
     { path: "/search", element: <PageSearch /> },
     { path: "/map", element: <PageMap /> },
+    { path: "/map2", element: <MapComponent /> },
     { path: "/table/report", element: <DataTableReport /> },
     { path: "/table/author", element: <DataTableAuthor /> },
     { path: "/table/list", element: <DataTableList /> },

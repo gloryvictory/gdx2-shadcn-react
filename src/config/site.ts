@@ -17,6 +17,10 @@ export const siteConfig = {
       title: "Карта",
       href: "/map",
     },
+    {
+      title: "Карта2",
+      href: "/map2",
+    },
   ],
   links: {
     youtube: "https://youtube.com/@m6io",
