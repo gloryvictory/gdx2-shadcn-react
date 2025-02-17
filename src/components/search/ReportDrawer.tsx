@@ -8,6 +8,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { buttonVariants } from "@/components/ui/button"
+
 import { ICountOnMap, IReport, IResult } from "@/types/models";
 
 import './styles.css'
@@ -15,6 +17,8 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { gdx2_urls } from "@/config/urls";
 import { Spinner } from "@/components/ui/spinner";
+import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
 
 
 type PropsDrawer = {
@@ -29,6 +33,11 @@ interface DescriptionItemProps {
   content: React.ReactNode;
 }
 
+interface DescriptionItemWithMapProps {
+  title: string;
+  content: React.ReactNode;
+  item: IReport| undefined;
+}
 
 const  result: ICountOnMap = {
   sta_count: 0,
@@ -55,6 +64,45 @@ export function DescriptionItem({ title, content }: DescriptionItemProps) {
       : null
   )
 }
+
+export function DescriptionItemWithMap({ title, content, item }: DescriptionItemWithMapProps) {
+  const link_to_map_sta = `http://${window.location.host}/map2?stargf=${item?.rgf}`
+  return (
+    // {
+      content?.toString().length 
+      ? 
+      <>
+        <div className="grid grid-cols-2 gap-1 content-center items-center dark:text-white">
+          <div className="col-span-1">
+            {`${title}`}
+          </div>
+          <div className="col-span-1 text-black dark:text-white">
+            {
+                // item?.rgf?.toString().length 
+                content.toString() != '0'
+                ? 
+                <>
+                <span> {content} </span>
+                  <Link to={link_to_map_sta} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>
+                </>
+                : content
+  
+            }
+          </div>
+          
+        </div>
+        <Separator />
+      </>
+      : null
+  )
+}
+
+
+// <Link to={link_to_map}  className="text-blue-800">
+// <Button >{content} Показать на карте</Button>
+// {/* <span> {content} Показать на карте</span> */}
+// </Link>                
+
 // export const TheDrawer: React.FC<PropsDrawer> = ({open, onClose,showDrawer, item }:PropsDrawer) => {
 
 export default function ReportDrawer({open, onClose, item }:PropsDrawer) {
@@ -137,15 +185,15 @@ export default function ReportDrawer({open, onClose, item }:PropsDrawer) {
                   <DescriptionItem title="Дата обновления" content={new Date(item?.lastupdate!).toLocaleDateString('ru-RU')} />
                   {isLoading
                   ? <Spinner size="lg" className="bg-black dark:bg-white" /> 
-                  : <DescriptionItem title="На карте (Точки)" content={data ? data.sta_count : 0} />
+                  : <DescriptionItemWithMap title="На карте (Точки)" content={data ? data.stp_count : 0} item={item} />
                   }
                   {isLoading
                   ? <Spinner size="lg" className="bg-black dark:bg-white" /> 
-                  : <DescriptionItem title="На карте (Линии)" content={data ? data.stl_count : 0} />
+                  : <DescriptionItemWithMap title="На карте (Линии)" content={data ? data.stl_count : 0} item={item} />
                   }
                   {isLoading
                   ? <Spinner size="lg" className="bg-black dark:bg-white" /> 
-                  : <DescriptionItem title="На карте (Полигоны)" content={data ? data.stl_count : 0} />
+                  : <DescriptionItemWithMap title="На карте (Полигоны)" content={data ? data.sta_count : 0} item={item} />
                   }
                 </SheetDescription>
               </SheetHeader>
