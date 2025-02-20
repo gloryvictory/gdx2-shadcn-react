@@ -67,6 +67,23 @@ export function DescriptionItem({ title, content }: DescriptionItemProps) {
 
 export function DescriptionItemWithMap({ title, content, item }: DescriptionItemWithMapProps) {
   const link_to_map_sta = `http://${window.location.host}/map2?stargf=${item?.rgf}`
+  const link_to_map_stl = `http://${window.location.host}/map2?stlrgf=${item?.rgf}`
+  const link_to_map_stp = `http://${window.location.host}/map2?stprgf=${item?.rgf}`
+
+  let linkTo: JSX.Element = <></>
+
+  if(title.includes("На карте (Точки)")){
+    linkTo = <Link to={link_to_map_stp} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+  }else
+      if(title.includes("На карте (Линии)")){
+        linkTo = <Link to={link_to_map_stl} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+      }else
+          if(title.includes("На карте (Полигоны)")){
+            linkTo = <Link to={link_to_map_sta} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+          }else console.log(`Не нашли в ${title}`);              
+
+
+
   return (
     // {
       content?.toString().length 
@@ -83,13 +100,11 @@ export function DescriptionItemWithMap({ title, content, item }: DescriptionItem
                 ? 
                 <>
                 <span> {content} </span>
-                  <Link to={link_to_map_sta} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>
+                {linkTo}  
                 </>
                 : content
-  
             }
           </div>
-          
         </div>
         <Separator />
       </>
@@ -97,11 +112,6 @@ export function DescriptionItemWithMap({ title, content, item }: DescriptionItem
   )
 }
 
-
-// <Link to={link_to_map}  className="text-blue-800">
-// <Button >{content} Показать на карте</Button>
-// {/* <span> {content} Показать на карте</span> */}
-// </Link>                
 
 // export const TheDrawer: React.FC<PropsDrawer> = ({open, onClose,showDrawer, item }:PropsDrawer) => {
 
