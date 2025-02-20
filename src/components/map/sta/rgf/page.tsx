@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import maplibregl, { AddLayerObject, MapGeoJSONFeature } from 'maplibre-gl';
 import {FullscreenControl, GeolocateControl, Layer, LayerProps, Map, MapInstance, MapRef, NavigationControl, ScaleControl, Source} from '@vis.gl/react-maplibre'; //AttributionControl
 import 'maplibre-gl/dist/maplibre-gl.css'; // Не забудьте импортировать стили
-import { layer_name_sta, layer_name_stl, sta_Layer, sta_Source, stl_Layer, stl_Source } from '../../layers';
+import { layer_name_sta, layer_name_stl, layer_name_stp, sta_Layer, sta_Source, stl_Layer, stl_Source, stp_Layer, stp_Source } from '../../layers';
 import { gdx2_cfg } from '@/config/cfg';
 import { useSearchParams } from 'react-router-dom';
 // import { LIGHT_MAP_STYLE } from '../../basemaps';
@@ -13,6 +13,7 @@ import { AllGeoJSON } from '@turf/helpers';
 
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`
 const layer_stl = `${gdx2_cfg.gdx2_map_db}.${layer_name_stl}`
+const layer_stp = `${gdx2_cfg.gdx2_map_db}.${layer_name_stp}`
 
 
 let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -28,10 +29,12 @@ export default function MapComponent() {
   // const term = searchParams.get("term")
   const sta_rgf_SearchParam = searchParams.get("stargf")
   const stl_rgf_SearchParam = searchParams.get("stlrgf")
+  const stp_rgf_SearchParam = searchParams.get("stprgf")
   // console.log(stargfSearchParam)
   // searchParams.
   const sta_source_id:string = sta_Source?.id!;
   const stl_source_id:string = stl_Source?.id!;
+  const stp_source_id:string = stp_Source?.id!;
 
 
   useEffect(() => {
@@ -150,9 +153,129 @@ export default function MapComponent() {
   
 
 
-      }
+      }else //if (stl_rgf_SearchParam) {
+      if (stp_rgf_SearchParam) {
+        const filteredFeatures = map.current?.querySourceFeatures(stp_source_id, {
+          sourceLayer: layer_stl, // Имя слоя в PBF
+          filter: ['==', ['get', 'in_n_rosg'], stp_rgf_SearchParam] // Фильтр для поиска объекта
+        });
+        console.log(`Found ${filteredFeatures?.length} features`)
+        filteredFeatures?.forEach(feature => {
+          const geometry = feature.geometry;
+          if (geometry.type === 'Point') {
+            const [x, y] = geometry.coordinates as [number, number]; // Explicit type assertion
+            if (x < minX) minX = x ;
+            if (y < minY) minY = y ;
+            if (x > maxX) maxX = x ;
+            if (y > maxY) maxY = y ;
+          } 
+        });
+        
+        map?.current?.fitBounds(
+          [
+            [minX, minY], // Southwest coordinates
+            [maxX, maxY], // Northeast coordinates
+          ],
+          {
+            padding: 20, // Optional padding
+            maxZoom: 10, // Optional maximum zoom level
+          }
+        );
 
-      // filteredFeatures.forEach(feature => {
+      }//if (stp_rgf_SearchParam) {
+    });
+
+
+    map.current.on('load', () => {
+    // Add zoom and rotation controls to the map.
+      map.current?.addControl(new maplibregl.NavigationControl({
+        visualizePitch: true,
+        visualizeRoll: true,
+        showZoom: true,
+        showCompass: true,
+
+      }));
+    
+      if (sta_rgf_SearchParam && map.current) {
+        // Применение фильтра к слою
+        // map.current?.setFilter('your-layer-id', ['==', ['get', 'in_n_rosg'], filterParam ]) ;//"271433"
+        map.current?.addSource(sta_source_id, sta_Source); // Добавляем слой  
+        const sta_Layer1: LayerProps = sta_Layer! 
+        map.current?.addLayer(sta_Layer1 as AddLayerObject); // Add the layer
+        console.log(sta_rgf_SearchParam)
+        map.current?.setFilter(layer_sta, ['==', ['get', 'in_n_rosg'], sta_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
+        }else //Если Отчеты линейные
+        if (stl_rgf_SearchParam && map.current) {
+          // Применение фильтра к слою
+          // map.current?.setFilter('your-layer-id', ['==', ['get', 'in_n_rosg'], filterParam ]) ;//"271433"
+          map.current?.addSource(stl_source_id, stl_Source); // Добавляем слой  
+          const stl_Layer1: LayerProps = stl_Layer! 
+          map.current?.addLayer(stl_Layer1 as AddLayerObject); // Add the layer
+          console.log(stl_rgf_SearchParam)
+          map.current?.setFilter(layer_stl, ['==', ['get', 'in_n_rosg'], stl_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
+          }else
+            if (stp_rgf_SearchParam && map.current) {
+              // Применение фильтра к слою
+              // map.current?.setFilter('your-layer-id', ['==', ['get', 'in_n_rosg'], filterParam ]) ;//"271433"
+              map.current?.addSource(stp_source_id, stp_Source); // Добавляем слой  
+              const stp_Layer1: LayerProps = stp_Layer! 
+              map.current?.addLayer(stp_Layer1 as AddLayerObject); // Add the layer
+              console.log(stp_rgf_SearchParam)
+              map.current?.setFilter(layer_stp, ['==', ['get', 'in_n_rosg'], stp_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
+              }
+
+      });
+      
+
+    return () => {
+      if (map?.current) {
+        map.current.remove(); // Удаляем карту
+        map.current = null; // Сбрасываем ссылку
+      }
+    };
+  }, [sta_rgf_SearchParam, stl_rgf_SearchParam]);
+
+  return <div ref={mapContainer} style={{ width: "100vw", height: "100vh", left:0, position:"absolute"  }} />;
+}
+
+// так переходим по конкретной координате
+//   const boundingBox = bbox(features[0] )
+//   map.current?.flyTo({
+//             center: [boundingBox[0], boundingBox[1]],
+//             zoom: 5, // Уровень масштабирования
+//             speed: 1.2, // Скорость анимации
+//             curve: 1.42 // Кривизна траектории
+//         });
+
+
+
+
+    // const geometry = features[0].geometry as maplibregl.Point; // Приведение типа
+    // const coordinates = geometry.coordinates; // Теперь TypeScript знает, что это Point
+    // // Перемещение карты к объекту
+    // map.current?.flyTo({
+    //     center: coordinates,
+    //     zoom: 10, // Уровень масштабирования
+    //     speed: 1.2, // Скорость анимации
+    //     curve: 1.42 // Кривизна траектории
+    // });
+
+
+// Получение объектов, соответствующих фильтру
+// let features = map.current?.querySourceFeatures(sta_source_id, { sourceLayer: sta_Layer.id  });
+// console.log(`Found ${features.length} features`)
+// if (features.length > 0) {
+//     const boundingBox = bbox(features[0] )
+//     map.current?.flyTo({
+//         center: [boundingBox[0], boundingBox[1]],
+//         zoom: 10, // Уровень масштабирования
+//         speed: 1.2, // Скорость анимации
+//         curve: 1.42 // Кривизна траектории
+//     });
+// }
+
+
+  // filteredFeatures.forEach(feature => {
       //   const geometry = feature.geometry;
       
       //   if (geometry.type === 'Point') {
@@ -212,89 +335,3 @@ export default function MapComponent() {
       //     maxZoom: 15, // Optional maximum zoom level
       //   }
       // );
-
-
-
-    });
-
-
-    map.current.on('load', () => {
-    // Add zoom and rotation controls to the map.
-      map.current?.addControl(new maplibregl.NavigationControl({
-        visualizePitch: true,
-        visualizeRoll: true,
-        showZoom: true,
-        showCompass: true,
-
-      }));
-    
-      if (sta_rgf_SearchParam && map.current) {
-        // Применение фильтра к слою
-        // map.current?.setFilter('your-layer-id', ['==', ['get', 'in_n_rosg'], filterParam ]) ;//"271433"
-        map.current?.addSource(sta_source_id, sta_Source); // Добавляем слой  
-        const sta_Layer1: LayerProps = sta_Layer! 
-        map.current?.addLayer(sta_Layer1 as AddLayerObject); // Add the layer
-        console.log(sta_rgf_SearchParam)
-        map.current?.setFilter(layer_sta, ['==', ['get', 'in_n_rosg'], sta_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
-        }else //Если Отчеты линейные
-        if (stl_rgf_SearchParam && map.current) {
-          // Применение фильтра к слою
-          // map.current?.setFilter('your-layer-id', ['==', ['get', 'in_n_rosg'], filterParam ]) ;//"271433"
-          map.current?.addSource(stl_source_id, stl_Source); // Добавляем слой  
-          const stl_Layer1: LayerProps = stl_Layer! 
-          map.current?.addLayer(stl_Layer1 as AddLayerObject); // Add the layer
-          console.log(stl_rgf_SearchParam)
-          map.current?.setFilter(layer_stl, ['==', ['get', 'in_n_rosg'], stl_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
-          }
-
-
-
-      });
-      
-
-    return () => {
-      if (map?.current) {
-        map.current.remove(); // Удаляем карту
-        map.current = null; // Сбрасываем ссылку
-      }
-    };
-  }, [sta_rgf_SearchParam, stl_rgf_SearchParam]);
-
-  return <div ref={mapContainer} style={{ width: "100vw", height: "100vh", left:0, position:"absolute"  }} />;
-}
-
-// так переходим по конкретной координате
-//   const boundingBox = bbox(features[0] )
-//   map.current?.flyTo({
-//             center: [boundingBox[0], boundingBox[1]],
-//             zoom: 5, // Уровень масштабирования
-//             speed: 1.2, // Скорость анимации
-//             curve: 1.42 // Кривизна траектории
-//         });
-
-
-
-
-    // const geometry = features[0].geometry as maplibregl.Point; // Приведение типа
-    // const coordinates = geometry.coordinates; // Теперь TypeScript знает, что это Point
-    // // Перемещение карты к объекту
-    // map.current?.flyTo({
-    //     center: coordinates,
-    //     zoom: 10, // Уровень масштабирования
-    //     speed: 1.2, // Скорость анимации
-    //     curve: 1.42 // Кривизна траектории
-    // });
-
-
-// Получение объектов, соответствующих фильтру
-// let features = map.current?.querySourceFeatures(sta_source_id, { sourceLayer: sta_Layer.id  });
-// console.log(`Found ${features.length} features`)
-// if (features.length > 0) {
-//     const boundingBox = bbox(features[0] )
-//     map.current?.flyTo({
-//         center: [boundingBox[0], boundingBox[1]],
-//         zoom: 10, // Уровень масштабирования
-//         speed: 1.2, // Скорость анимации
-//         curve: 1.42 // Кривизна траектории
-//     });
-// }

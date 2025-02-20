@@ -73,13 +73,13 @@ export function DescriptionItemWithMap({ title, content, item }: DescriptionItem
   let linkTo: JSX.Element = <></>
 
   if(title.includes("На карте (Точки)")){
-    linkTo = <Link to={link_to_map_stp} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+    linkTo = <Link to={link_to_map_stp} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
   }else
       if(title.includes("На карте (Линии)")){
-        linkTo = <Link to={link_to_map_stl} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+        linkTo = <Link to={link_to_map_stl} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
       }else
           if(title.includes("На карте (Полигоны)")){
-            linkTo = <Link to={link_to_map_sta} className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+            linkTo = <Link to={link_to_map_sta} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
           }else console.log(`Не нашли в ${title}`);              
 
 
