@@ -1,4 +1,4 @@
-import MapComponent from "./components/map/sta/rgf/page";
+import MapComponent from "./components/map/sta/rgf/Map2";
 import DataTableAreaoil from "./components/table/areaoil/table-areaoil";
 import DataTableAuthor from "./components/table/author/table-author";
 import DataTableField from "./components/table/field/table-field";
