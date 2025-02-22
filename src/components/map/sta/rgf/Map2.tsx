@@ -1,16 +1,14 @@
-// import { useSearchParams } from 'next/navigation';
-import bbox from '@turf/bbox';
+// import React from 'react';
+
+// import bbox from '@turf/bbox';
 import { useEffect, useRef } from 'react';
-import maplibregl, { AddLayerObject, MapGeoJSONFeature, MapLayerMouseEvent, MapMouseEvent } from 'maplibre-gl';
-import {FullscreenControl, GeolocateControl, Layer, LayerProps, Map, MapInstance, MapRef, NavigationControl, ScaleControl, Source} from '@vis.gl/react-maplibre'; //AttributionControl
+import maplibregl, { AddLayerObject, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl'; //
+import { LayerProps} from '@vis.gl/react-maplibre'; //AttributionControl, FullscreenControl, GeolocateControl, Layer, Map, MapInstance, MapRef, NavigationControl, ScaleControl, Source
 import 'maplibre-gl/dist/maplibre-gl.css'; // Не забудьте импортировать стили
 import { layer_name_sta, layer_name_stl, layer_name_stp, sta_Layer, sta_Source, stl_Layer, stl_Source, stp_Layer, stp_Source } from '../../layers';
 import { gdx2_cfg } from '@/config/cfg';
 import { useSearchParams } from 'react-router-dom';
 // import { LIGHT_MAP_STYLE } from '../../basemaps';
-// import { useSearchParams } from 'react-router-dom';
-import { AllGeoJSON } from '@turf/helpers';
-import React from 'react';
 
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`
 const layer_stl = `${gdx2_cfg.gdx2_map_db}.${layer_name_stl}`
@@ -32,7 +30,7 @@ export default function MapComponent() {
 
   // console.log(window.location)
 
-  let [searchParams, setSearchParams] = useSearchParams()
+  let [searchParams, ] = useSearchParams()
   // const term = searchParams.get("term")
   const sta_rgf_SearchParam = searchParams.get("stargf")
   const stl_rgf_SearchParam = searchParams.get("stlrgf")
@@ -43,15 +41,15 @@ export default function MapComponent() {
   const stl_source_id:string = stl_Source?.id!;
   const stp_source_id:string = stp_Source?.id!;
 
-  const [showTable, setShowTable] = React.useState<boolean>(false);
-  const [lon, setLng]             = React.useState<number>(66);
-  const [lat, setLat]             = React.useState<number>(66);
-  const [zoom, setZoom]           = React.useState<number>(3.5);
+  // const [showTable, setShowTable] = React.useState<boolean>(false);
+  // const [lon, setLng]             = React.useState<number>(66);
+  // const [lat, setLat]             = React.useState<number>(66);
+  // const [zoom, setZoom]           = React.useState<number>(3.5);
  
  
-  const handleIdle = () => {
-    console.log('Карта полностью прогрузилась!');
-  };
+  // const handleIdle = () => {
+  //   console.log('Карта полностью прогрузилась!');
+  // };
 
   
 function tableFeature(features: maplibregl.MapGeoJSONFeature[] | undefined) {
@@ -139,10 +137,10 @@ const mapMouseLeave = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | u
       popup.remove();
 }
 const mapMouseMove = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => {
-  const ll = e.lngLat.wrap()        
-  setLng(  (prev:number) => parseFloat(ll.lng.toFixed(4)));
-  setLat(  (prev:number) => parseFloat(ll.lat.toFixed(4)));
-  setZoom( (prev:number) => parseFloat(map?.current?.getZoom().toFixed(2)!));
+  // const ll = e.lngLat.wrap()        
+  // setLng(  (prev:number) => parseFloat(ll.lng.toFixed(4)));
+  // setLat(  (prev:number) => parseFloat(ll.lat.toFixed(4)));
+  // setZoom( (prev:number) => parseFloat(map?.current?.getZoom().toFixed(2)!));
 }
 
 

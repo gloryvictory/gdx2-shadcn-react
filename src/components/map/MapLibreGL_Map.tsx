@@ -10,7 +10,7 @@ import { LIGHT_MAP_STYLE } from "./basemaps";
 
 // import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
 // import { Table as TableIcon} from 'lucide-react';
-import maplibregl, { MapLayerMouseEvent } from 'maplibre-gl';
+import maplibregl, { MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl'; //MapLayerMouseEvent
 import { IDataMap} from '@/types/models';
 import { gdx2_cfg } from '@/config/cfg';
 import TableDrawer from './TableDrawer';
@@ -61,7 +61,7 @@ export default function MapLibreGL_Map() {
       // map?.addControl(new MaplibreStyleSwitcherControl(basemaps_styles, basemaps_options));
       // map?.addControl(legend, 'top-right');
 
-      map?.on('mouseenter', layer_stp, function (e:any) {
+      map?.on('mouseenter', layer_stp, function (e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) {
         map.getCanvas().style.cursor = 'pointer';
       
       const features = e?.features
@@ -72,13 +72,13 @@ export default function MapLibreGL_Map() {
       });
 
       // reset cursor to default when user is no longer hovering over a clickable feature
-      map?.on('mouseleave', layer_stp, function (e:any) {
+      map?.on('mouseleave', layer_stp, function (e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) {
         map.getCanvas().style.cursor = '';       
         popup.remove();
       })    
       
 
-      map?.on('mousemove', function (e: MapLayerMouseEvent) {
+      map?.on('mousemove', function ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) {
         const ll = e.lngLat.wrap()        
         setLng(  (prev:number) => parseFloat(ll.lng.toFixed(4)));
         setLat(  (prev:number) => parseFloat(ll.lat.toFixed(4)));

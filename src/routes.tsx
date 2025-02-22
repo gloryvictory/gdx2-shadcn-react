@@ -1,3 +1,4 @@
+// import React from "react";
 import MapComponent from "./components/map/sta/rgf/Map2";
 import DataTableAreaoil from "./components/table/areaoil/table-areaoil";
 import DataTableAuthor from "./components/table/author/table-author";
@@ -13,6 +14,18 @@ import PageHome from "./pages/home/PageHome";
 import PageMap from "./pages/map/PageMap";
 import PageSearch from "./pages/search/PageSearch";
 import PageStat from "./pages/stat/PageStat";
+// const PageSearch = React.lazy(() => import("./pages/search/PageSearch"));
+// const MapComponent = React.lazy(() => import("./components/map/sta/rgf/Map2"));
+// const DataTableAreaoil = React.lazy(() => import("./components/table/areaoil/table-areaoil"));
+// const DataTableAuthor = React.lazy(() => import("./components/table/author/table-author"));
+// const DataTableField = React.lazy(() => import("./components/table/field/table-field"));
+// const DataTableList = React.lazy(() => import("./components/table/list/table-list"));
+// const DataTableLu = React.lazy(() => import("./components/table/lu/table-lu"));
+// const DataTableOrg = React.lazy(() => import("./components/table/org/table-org"));
+// const DataTablePi = React.lazy(() => import("./components/table/pi/table-pi"));
+// const DataTableReport = React.lazy(() => import("./components/table/report/table-report"));
+// const DataTableSubrf = React.lazy(() => import("./components/table/subrf/table-subrf"));
+// const DataTableVidrab = React.lazy(() => import("./components/table/vidrab/table-vidrab"));
 
 
 export const routes = [
