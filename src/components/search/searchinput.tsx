@@ -71,14 +71,14 @@ export default function SearchInput() {
     <div className={"flex w-full-5 items-center justify-items-center content-center space-x-2 cursor-pointer"}>
       <Input
         aria-label="Поиск"
-        className="flex w-full bg-default-100 text-sm hover:outline-offset-1 hover:ring-2 hover:ring-blue-500/50 focus:ring-blue-500/50 "
+        className="flex w-full bg-default-100 text-sm hover:outline-offset-1 hover:ring-2 hover:ring-blue-500/50 focus:ring-blue-500/50 dark:bg-slate-200 dark:text-slate-950"
         placeholder="Поиск..."
         type="search"
         onChange={onChange}
         value={inputValue}
         onKeyDown={onEnterPress}
         />
-      <Button className="lg:inline-block hover:ring-blue-200/50  bg-slate-500 ring-blue-500/50" onClick={onPress}>Найти</Button>
+      <Button className="lg:inline-block hover:ring-blue-200/50  bg-slate-500 ring-blue-500/50 dark:text-slate-200" onClick={onPress}>Найти</Button>
     </div>
 
       {/* {Вы искали:      <strong>{inputValue.length > 3 ? inputValue : ''}</strong> } */}

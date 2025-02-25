@@ -58,56 +58,56 @@ function tableFeature(features: maplibregl.MapGeoJSONFeature[] | undefined) {
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
         <tr>
-          <th style="border: 1px solid #ddd; padding: 8px;">Параметр</th>
-          <th style="border: 1px solid #ddd; padding: 8px;">Значение</th>
+          <th class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Параметр</th>
+          <th class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Значение</th>
           
         </tr>
       </thead>
       <tbody>
         ${features?.map((feature) => `
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Автор</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.avts}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Автор</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.avts}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Отчет</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.name_otch}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Отчет</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.name_otch}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Организация</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.org_isp}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Организация</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.org_isp}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Год начала</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.god_nach}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Год начала</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.god_nach}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Год начала</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.god_end}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Год начала</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.god_end}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Метод</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.method}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Метод</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.method}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Лист</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.nom_1000}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Лист</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.nom_1000}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Масштаб</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.scale}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Масштаб</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.scale}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">ТГФ</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.tgf}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">ТГФ</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.tgf}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">Вид</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.vid_iz}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Вид</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.vid_iz}</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #ddd; padding: 8px;">№</td>
-            <td style="border: 1px solid #ddd; padding: 8px;">${feature.properties.web_uk_id}</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">№</td>
+            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.web_uk_id}</td>
           </tr>
 
 

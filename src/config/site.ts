@@ -5,10 +5,10 @@ export const siteConfig = {
   description:
     "Сервис по отчетам ЗапСибНИИГГ",
   mainNav: [
-    {
-      title: "Статистика",
-      href: "/stat",
-    },
+    // {
+    //   title: "Статистика",
+    //   href: "/stat",
+    // },
     {
       title: "Поиск",
       href: "/search",

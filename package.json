@@ -1,13 +1,15 @@
 {
-	"name": "shadcn-vite-template",
-	"author": "m6io",
+	"name": "gdx2-shadcn-react",
+	"author": "zamaraev@gmail.com",
 	"private": true,
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"type": "module",
+
 	"scripts": {
 		"dev": "vite",
-		"build": "npm run rimraf && tsc && vite build",
-		"rimraf": "rimraf dist",
+		"build": "npm run rimraf && tsc && vite build && npm run zip",
+		"rimraf": "rimraf dist && rimraf build",
+    "zip": "zip-build dist build",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview"
 	},
