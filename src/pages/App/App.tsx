@@ -18,6 +18,7 @@ import DataTableLu from "@/components/table/lu/table-lu";
 import DataTablePi from "@/components/table/pi/table-pi";
 import DataTableVidrab from "@/components/table/vidrab/table-vidrab";
 import DataTableAuthor from "@/components/table/author/table-author";
+import PageMessage from "../message/PageMessage";
 
 
 // { path: "/", element: <PageHome /> },
@@ -64,6 +65,7 @@ function App() {
             <Route path="/table/lu" element={<DataTableLu />} />
             <Route path="/table/pi" element={<DataTablePi />} />
             <Route path="/table/vidrab" element={<DataTableVidrab />} />
+            <Route path="/message" element={<PageMessage />} />
             {/* <Route path="*" element={<NotFound />} /> Обработка 404 */}
           </Routes>
         </div>

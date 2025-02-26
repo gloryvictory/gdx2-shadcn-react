@@ -28,10 +28,12 @@ export const gdx2_urls = {
   gdx2_url_report_lu              : `${gdx2_backend_url}/report/lu`,
   gdx2_url_report_pi              : `${gdx2_backend_url}/report/pi`,
   gdx2_url_report_vid_rab         : `${gdx2_backend_url}/report/vid_rab`,
+  gdx2_url_message                : `${gdx2_backend_url}/report/message`,
 
   gdx2_url_sta            : `${gdx2_backend_url}/sta/rosg/count`,
   gdx2_url_stl            : `${gdx2_backend_url}/stl/rosg/count`,
   gdx2_url_stp            : `${gdx2_backend_url}/stp/rosg/count`,
+  
   
 
 
