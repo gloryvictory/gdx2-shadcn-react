@@ -5,6 +5,7 @@ import { Spinner } from '../ui/spinner';
 import { useMessage } from '@/hooks/useMessage';
 import { gdx2_urls } from '@/config/urls';
 // import { Tooltip } from '../ui/tooltip';
+import { CirclePlus, Plus } from 'lucide-react';
 
 import {
   Tooltip,
@@ -12,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip'
+import MessageForm from './MessageForm';
 
 // import { Button, Spin, Tooltip  } from 'antd';
 // import { getMessages } from '../actions/getAll';
@@ -51,18 +53,17 @@ const Message: React.FC = () => {
     <>
       { loading && <Spinner size="md" className="bg-black dark:bg-white" /> }
       { error && `Error: ${error}` }
-    
+      {isModalOpen && <MessageForm open={isModalOpen} onOk={handleOk} onCancel={handleCancel}   /> }
     <div className="">
       
       <div className="container py-1 px-1 mx-0 min-w-full">
-        <div className="flex justify-center">
-          
+        <div className="flex justify-center "> 
           <Button 
-            className="min-w-full lg:inline-block hover:ring-blue-200/50 dark:hover:text-slate-800 bg-slate-500 ring-blue-500/50 dark:text-slate-200"
+            className="min-w-full hover:ring-blue-200/50 bg-slate-500 ring-blue-500/50 dark:hover:text-slate-800 dark:text-slate-200"
             onClick={()=>{setIsModalOpen(true); console.log(`isModalOpen: ${isModalOpen}`) } }
             disabled={isModalOpen}
           >
-            {!isModalOpen ? "Добавить свое Пожелание" : "Ваше пожелание принято!"} 
+            <CirclePlus className='m-2'/>{!isModalOpen ? "Добавить свое Пожелание" : "Ваше пожелание принято!"} 
           </Button>
         </div>
       </div>
@@ -76,18 +77,15 @@ const Message: React.FC = () => {
         {/* <ol type="1" className="marker:text-sky-400 list-disc pl-5 space-y-3 text-slate-500"> */}
         <ol className="marker:text-sky-400 pl-5 space-y-3 text-slate-500 list-decimal ml-10 ">
           {data && data?.data.map((item: any ) => (                
-            <li key={item.id} className={ "w-full box-border rounded bg-slate-100 w-96 pl-2 hover:bg-slate-700 hover:text-sky-400"} > 
+            <li key={item.id} className={ "w-full box-border rounded bg-slate-100  pl-2 hover:bg-slate-700 hover:text-sky-400 dark:hover:text-slate-800 dark:text-slate-100 dark:bg-slate-500"} > 
             <Tooltip>
               <TooltipTrigger>
-                
                   <span className="font-mono">{item.name_ru}</span>
-                
               </TooltipTrigger>
               <TooltipContent>
                 <p>{ 'Дата: ' + new Date(item.lastupdate).toLocaleDateString('ru-RU') }</p>
-                <p>{ "ФИО: " + ` ${item.fio}` }</p>
-                <p>{ "Почта: " + ` ${item.email}`}</p>
-
+                <p>{ "ФИО: " + `${item.fio}` }</p>
+                <p>{ "Почта: " + `${item.email}`}</p>
               </TooltipContent>
             </Tooltip>
             </li>
