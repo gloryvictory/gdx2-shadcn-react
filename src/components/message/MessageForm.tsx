@@ -1,6 +1,6 @@
 
 // import { useState, useEffect} from 'react'
-import React, { useState } from 'react';
+import React from 'react';
 // import { Modal  } from 'shadcn';
 
 import { Button } from "@/components/ui/button"
@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Textarea } from '../ui/textarea';
 import { gdx2_urls } from '@/config/urls';
-import Message from './message';
+// import Message from './message';
 
 // type FieldType = {
 //   fio?: string;
@@ -163,8 +163,8 @@ return (
             )}  
           />
           <div className='flex justify-start '>
-            <Button className='ml-1 mr-2' type="submit">Отправить</Button>
-            <Button onClick={onCancel}>Отмена</Button>
+            <Button className='ml-1 mr-2 dark:focus:bg-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200 hover:bg-slate-500 focus:bg-slate-700' type="submit">Отправить</Button>
+            <Button className='bg-slate-600 dark:focus:bg-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200 hover:bg-slate-700 focus:bg-slate-700' onClick={onCancel}>Отмена</Button>
           </div>
           
           </>

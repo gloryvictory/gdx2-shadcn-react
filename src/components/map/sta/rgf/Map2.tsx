@@ -167,7 +167,7 @@ const mapMouseMove = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | un
           sourceLayer: layer_sta, // Имя слоя в PBF
           filter: ['==', ['get', 'in_n_rosg'], sta_rgf_SearchParam] // Фильтр для поиска объекта
         });
-        console.log(`Found ${filteredFeatures?.length} features`)
+        // console.log(`Found ${filteredFeatures?.length} features`)
         if (filteredFeatures && filteredFeatures?.length > 0 ) {
           // Calculate the bounding box of the filtered features
           const featureCollection = {
@@ -216,7 +216,7 @@ const mapMouseMove = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | un
           sourceLayer: layer_stl, // Имя слоя в PBF
           filter: ['==', ['get', 'in_n_rosg'], stl_rgf_SearchParam] // Фильтр для поиска объекта
         });
-        console.log(`Found ${filteredFeatures?.length} features`)
+        // console.log(`Found ${filteredFeatures?.length} features`)
         filteredFeatures?.forEach(feature => {
           const geometry = feature.geometry;
         
@@ -268,7 +268,7 @@ const mapMouseMove = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | un
           sourceLayer: layer_stp, // Имя слоя в PBF
           filter: ['==', ['get', 'in_n_rosg'], stp_rgf_SearchParam] // Фильтр для поиска объекта
         });
-        console.log(`Found ${filteredFeatures?.length} features`)
+        // console.log(`Found ${filteredFeatures?.length} features`)
         filteredFeatures?.forEach(feature => {
           const geometry = feature.geometry;
           if (geometry.type === 'Point') {
@@ -309,14 +309,14 @@ const mapMouseMove = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | un
         map.current?.addSource(sta_source_id, sta_Source); // Добавляем слой  
         const sta_Layer1: LayerProps = sta_Layer! 
         map.current?.addLayer(sta_Layer1 as AddLayerObject); // Add the layer
-        console.log(sta_rgf_SearchParam)
+        // console.log(sta_rgf_SearchParam)
         map.current?.setFilter(layer_sta, ['==', ['get', 'in_n_rosg'], sta_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stargf=271433"        
         }else //Если Отчеты линейные
         if (stl_rgf_SearchParam && map.current) {
           map.current?.addSource(stl_source_id, stl_Source); // Добавляем слой  
           const stl_Layer1: LayerProps = stl_Layer! 
           map.current?.addLayer(stl_Layer1 as AddLayerObject); // Add the layer
-          console.log(stl_rgf_SearchParam)
+          // console.log(stl_rgf_SearchParam)
           map.current?.setFilter(layer_stl, ['==', ['get', 'in_n_rosg'], stl_rgf_SearchParam ]) ;//"http://localhost:5173/map2?stlrgf=374225"        
           }else
             if (stp_rgf_SearchParam && map.current) {
