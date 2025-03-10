@@ -8,7 +8,7 @@ import {
 import useTheme from "@/hooks/useSelectTheme"
 import { Moon, Sun } from "lucide-react"
 
-export function ModeToggle() {
+export function BtnModeToggle() {
   const { setTheme } = useTheme()
 
   return (

@@ -5,10 +5,6 @@ export const siteConfig = {
   description:
     "Сервис по отчетам ЗапСибНИИГГ",
   mainNav: [
-    // {
-    //   title: "Статистика",
-    //   href: "/stat",
-    // },
     {
       title: "Поиск",
       href: "/search",
@@ -21,10 +17,9 @@ export const siteConfig = {
       title: "Пожелания",
       href: "/message",
     },
+    {
+      title: "Фильтр",
+      href: "/filter",
+    },
   ],
-  links: {
-    youtube: "https://youtube.com/@m6io",
-    github: "https://github.com/m6io/shadcn-vite-template",
-    docs: "https://ui.shadcn.com",
-  },
 }
