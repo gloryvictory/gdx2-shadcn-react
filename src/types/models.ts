@@ -16,6 +16,11 @@ export interface IResult {
   count: number
   data: IData[]
 }
+export interface IResultStringArray {
+  msg: string
+  count: number
+  data: string[]
+}
 
 export interface IData {
 lastupdate: string

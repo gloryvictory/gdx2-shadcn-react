@@ -33,6 +33,7 @@ export const gdx2_urls = {
   gdx2_url_sta            : `${gdx2_backend_url}/sta/rosg/count`,
   gdx2_url_stl            : `${gdx2_backend_url}/stl/rosg/count`,
   gdx2_url_stp            : `${gdx2_backend_url}/stp/rosg/count`,
+  gdx2_url_sta_method     : `${gdx2_backend_url}/sta/all/method/unique`,
   
   
 

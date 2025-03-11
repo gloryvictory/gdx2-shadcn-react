@@ -15,16 +15,16 @@ function PageFilter() {
   };
   
   // min-h-screen
-
+  // h-full 
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="mt-2 rounded-lg border"
+      className="mt-2 w-full min-h-14 rounded-lg border absolute l-0 t-0"
     >
-      <ResizablePanel defaultSize={15}>
-        <SelectFilter onChange={handleFilterChange}/>
-        <div className="flex h-full items-center min-w-24">
-          <AreaFilter/>  
+      <ResizablePanel defaultSize={15} className="mt-10 flex w-full items-center  min-w-28 max-w-64">
+        <div className="mt-20 min-h-full w-full items-center min-w-24">
+          <SelectFilter onChange={handleFilterChange} />
+          <AreaFilter />  
         </div>
         
         {/* <div className="flex h-full items-center justify-center p-6 min-w-24">

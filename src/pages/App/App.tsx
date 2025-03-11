@@ -44,12 +44,10 @@ function App() {
   return (
     <>
               {/* <div className="relative flex min-h-screen flex-col"> */}
-      <div className="relative flex min-h-screen flex-col">
+      <div className="relative flex h-full w-full min-h-screen flex-col">
         <SiteHeader />
     
           {/* <div className="flex-1">{children}</div> */}
-
-        <div className="flex-1">
           <Routes>
             <Route path="/" element={<PageHome />} />
             <Route path="/stat" element={<PageStat />} />
@@ -70,12 +68,8 @@ function App() {
             <Route path="/filter" element={<PageFilter />} />
             {/* <Route path="*" element={<NotFound />} /> Обработка 404 */}
           </Routes>
-        </div>
-        {/* </Router> */}
         <TailwindIndicator />
       </div>
-    {/* <Router> */}
-    
     </>
   )
 }
