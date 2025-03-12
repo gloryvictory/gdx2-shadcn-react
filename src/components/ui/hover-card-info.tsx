@@ -6,6 +6,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import BtnInfo from "./btn-info"
+import { nanoid } from "nanoid"
 // asChild
 
 const data:Array<string>=[
@@ -17,13 +18,13 @@ const data:Array<string>=[
 export function HoverCardDemo() {
   return (
     <HoverCard>
-      <HoverCardTrigger >
+      <HoverCardTrigger  >
         <BtnInfo/>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
+      <HoverCardContent  className="w-80">
         {
           data.map((item)=>(
-            <div className="flex justify-between space-x-4">
+            <div key={nanoid()} className="flex justify-between space-x-4">
               <div className="space-y-1">
                 {item}
               </div>

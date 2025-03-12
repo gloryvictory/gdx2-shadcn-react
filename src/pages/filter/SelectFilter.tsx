@@ -15,7 +15,7 @@ interface SelectFilterProps {
 }
 
 export function SelectFilter({ onChange }: SelectFilterProps) {
-  const [value, setValue] = React.useState("apple");
+  const [value, setValue] = React.useState("Метод");
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
@@ -30,7 +30,7 @@ export function SelectFilter({ onChange }: SelectFilterProps) {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Фильтры</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="method">Метод</SelectItem>
           <SelectItem value="banana">Banana</SelectItem>
           <SelectItem value="blueberry">Blueberry</SelectItem>
           <SelectItem value="grapes">Grapes</SelectItem>
