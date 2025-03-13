@@ -8,6 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'; // Не забудьте импорт
 import { layer_name_sta, layer_name_stl, layer_name_stp, sta_Layer, sta_Source, stl_Layer, stl_Source, stp_Layer, stp_Source } from '../../layers';
 import { gdx2_cfg } from '@/config/cfg';
 import { useSearchParams } from 'react-router-dom';
+import { tableFeature } from '../../tableFeature';
 // import { LIGHT_MAP_STYLE } from '../../basemaps';
 
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`
@@ -51,75 +52,6 @@ export default function MapComponent() {
   //   console.log('Карта полностью прогрузилась!');
   // };
 
-  
-function tableFeature(features: maplibregl.MapGeoJSONFeature[] | undefined) {
-  const tableHTML = `
-    <h1>Отчетов: ${features?.length}</h1>
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead>
-        <tr>
-          <th class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Параметр</th>
-          <th class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Значение</th>
-          
-        </tr>
-      </thead>
-      <tbody>
-        ${features?.map((feature) => `
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Автор</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.avts}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Отчет</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.name_otch}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Организация</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.org_isp}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Год начала</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.god_nach}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Год начала</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.god_end}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Метод</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.method}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Лист</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.nom_1000}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Масштаб</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.scale}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">ТГФ</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.tgf}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">Вид</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.vid_iz}</td>
-          </tr>
-          <tr>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">№</td>
-            <td class="border border-gray-300 p-2 dark:bg-slate-800 dark:text-slate-200">${feature.properties.web_uk_id}</td>
-          </tr>
-
-
-        `
-          )
-          .join('')}
-      </tbody>
-    </table>
-  `;
-  
-  return( tableHTML ) 
-}
   
 const mapMouseEnter = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => {
   const mystyle:CSSStyleDeclaration = map.current?.getCanvas().style!

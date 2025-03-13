@@ -4,10 +4,10 @@ import {  IResultStringArray } from '@/types/models'
 
 
 
-export function useMethod(url : string ) {
-  const [dataMethod, setData] = useState<IResultStringArray>()
-  const [loadingMethod, setLoading] = useState(false)
-  const [errorMethod, setError] = useState('')
+export function useVidIz(url : string ) {
+  const [dataVidIz, setData] = useState<IResultStringArray>()
+  const [loadingVidIz, setLoading] = useState(false)
+  const [errorVidIz, setError] = useState('')
 
   
   async function fetchData() {
@@ -39,5 +39,5 @@ export function useMethod(url : string ) {
     fetchData()
   }, [])
 
-  return { dataMethod, errorMethod, loadingMethod }
+  return { dataVidIz, errorVidIz, loadingVidIz }
 }

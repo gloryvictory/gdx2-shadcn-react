@@ -31,10 +31,8 @@ export function SelectFilter({ onChange }: SelectFilterProps) {
         <SelectGroup>
           <SelectLabel>Фильтры</SelectLabel>
           <SelectItem value="method">Метод</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
+          <SelectItem value="vid_iz">Вид изученности</SelectItem>
+          <SelectItem value="god_nach">Начало работ</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

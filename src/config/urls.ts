@@ -34,6 +34,8 @@ export const gdx2_urls = {
   gdx2_url_stl            : `${gdx2_backend_url}/stl/rosg/count`,
   gdx2_url_stp            : `${gdx2_backend_url}/stp/rosg/count`,
   gdx2_url_stall_method     : `${gdx2_backend_url}/stall/all/method/unique`,
+  gdx2_url_stall_vid_iz     : `${gdx2_backend_url}/stall/all/vid_iz/unique`,
+  gdx2_url_stall_god_nach     : `${gdx2_backend_url}/stall/all/god_nach/unique`,
   
   
 
