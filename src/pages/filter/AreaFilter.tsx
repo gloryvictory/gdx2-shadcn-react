@@ -11,6 +11,11 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useVidIz } from "@/hooks/useVidIz"
 import { useGodNach } from "@/hooks/useGodNach"
+import { useGodEnd } from "@/hooks/useGodEnd"
+import { useTGF } from "@/hooks/useTGF"
+import { useNomer } from "@/hooks/useNomer"
+import { useOrgIsp } from "@/hooks/useOrgIsp"
+import { useScale } from "@/hooks/useScale"
 
 
 
@@ -22,7 +27,12 @@ interface SelectAreaProps {
 export function AreaFilter({ onChange, selectFilter }: SelectAreaProps) {
   const { dataMethod, errorMethod, loadingMethod } = useMethod(gdx2_urls.gdx2_url_stall_method)
   const { dataVidIz, errorVidIz, loadingVidIz    } = useVidIz(gdx2_urls.gdx2_url_stall_vid_iz)
-  const {dataGodNach, errorGodNach, loadingGodNach    } = useGodNach(gdx2_urls.gdx2_url_stall_god_nach)
+  const { dataGodNach, errorGodNach, loadingGodNach    } = useGodNach(gdx2_urls.gdx2_url_stall_god_nach)
+  const { dataGodEnd, errorGodEnd, loadingGodEnd    } = useGodEnd(gdx2_urls.gdx2_url_stall_god_end)
+  const { dataTGF, errorTGF, loadingTGF    } = useTGF(gdx2_urls.gdx2_url_stall_tgf)
+  const { dataNomer, errorNomer, loadingNomer    } = useNomer(gdx2_urls.gdx2_url_stall_nom_1000)
+  const { dataScale, errorScale, loadingScale    } = useScale(gdx2_urls.gdx2_url_stall_scale)
+  // const { dataOrgIsp, errorOrgIsp, loadingOrgIsp    } = useOrgIsp(gdx2_urls.gdx2_url_stall_org_isp)
 
   const [value, setValue] = React.useState("");
 
@@ -62,6 +72,58 @@ function getMethod(selectFilter: string) {
   if(selectFilter === 'god_nach') {
     return(
       dataGodNach?.data  && dataGodNach?.data?.map((res) => (
+        <div key={nanoid()} >
+          <div key={nanoid()} className="flex items-center space-x-2">
+            <RadioGroupItem  key={nanoid()}  value={res} id={res} />
+            <Label  key={nanoid()} htmlFor={res}>{res}</Label>
+          </div>
+          <Separator key={nanoid()} className="my-2" />
+        </div>
+      ))
+    )
+  }
+  if(selectFilter === 'god_end') {
+    return(
+      dataGodEnd?.data  && dataGodEnd?.data?.map((res) => (
+        <div key={nanoid()} >
+          <div key={nanoid()} className="flex items-center space-x-2">
+            <RadioGroupItem  key={nanoid()}  value={res} id={res} />
+            <Label  key={nanoid()} htmlFor={res}>{res}</Label>
+          </div>
+          <Separator key={nanoid()} className="my-2" />
+        </div>
+      ))
+    )
+  }
+  if(selectFilter === 'tgf') {
+    return(
+      dataTGF?.data  && dataTGF?.data?.map((res) => (
+        <div key={nanoid()} >
+          <div key={nanoid()} className="flex items-center space-x-2">
+            <RadioGroupItem  key={nanoid()}  value={res} id={res} />
+            <Label  key={nanoid()} htmlFor={res}>{res}</Label>
+          </div>
+          <Separator key={nanoid()} className="my-2" />
+        </div>
+      ))
+    )
+  }
+  if(selectFilter === 'nom_1000') {
+    return(
+      dataNomer?.data  && dataNomer?.data?.map((res) => (
+        <div key={nanoid()} >
+          <div key={nanoid()} className="flex items-center space-x-2">
+            <RadioGroupItem  key={nanoid()}  value={res} id={res} />
+            <Label  key={nanoid()} htmlFor={res}>{res}</Label>
+          </div>
+          <Separator key={nanoid()} className="my-2" />
+        </div>
+      ))
+    )
+  }
+  if(selectFilter === 'scale') {
+    return(
+      dataScale?.data  && dataScale?.data?.map((res) => (
         <div key={nanoid()} >
           <div key={nanoid()} className="flex items-center space-x-2">
             <RadioGroupItem  key={nanoid()}  value={res} id={res} />

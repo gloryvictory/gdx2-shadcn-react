@@ -44,7 +44,7 @@ function App() {
   return (
     <>
               {/* <div className="relative flex min-h-screen flex-col"> */}
-      <div className="relative flex h-full w-full min-h-screen flex-col">
+      <div className="h-full w-full min-h-screen flex-col">
         <SiteHeader />
     
           {/* <div className="flex-1">{children}</div> */}
@@ -75,3 +75,4 @@ function App() {
 }
 
 export default App
+// relative flex 

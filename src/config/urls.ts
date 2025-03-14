@@ -36,6 +36,11 @@ export const gdx2_urls = {
   gdx2_url_stall_method     : `${gdx2_backend_url}/stall/all/method/unique`,
   gdx2_url_stall_vid_iz     : `${gdx2_backend_url}/stall/all/vid_iz/unique`,
   gdx2_url_stall_god_nach     : `${gdx2_backend_url}/stall/all/god_nach/unique`,
+  gdx2_url_stall_god_end     : `${gdx2_backend_url}/stall/all/god_end/unique`,
+  gdx2_url_stall_tgf     : `${gdx2_backend_url}/stall/all/tgf/unique`,
+  gdx2_url_stall_nom_1000     : `${gdx2_backend_url}/stall/all/nom_1000/unique`,
+  gdx2_url_stall_org_isp     : `${gdx2_backend_url}/stall/all/org_isp/unique`,
+  gdx2_url_stall_scale     : `${gdx2_backend_url}/stall/all/scale/unique`,
   
   
 

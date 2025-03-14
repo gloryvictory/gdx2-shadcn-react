@@ -152,6 +152,26 @@ function FilterMap({selectFilter, selectList}: FilterMapProps) {
       map.current.setFilter(layer_stp, ['==', ['get', 'god_nach'], listValue]);  
       map.current.setFilter(layer_stl, ['==', ['get', 'god_nach'], listValue]);  
     }
+    if (filterValue === 'god_end') {
+      map.current.setFilter(layer_sta, ['==', ['get', 'god_end'], listValue]);  
+      map.current.setFilter(layer_stp, ['==', ['get', 'god_end'], listValue]);  
+      map.current.setFilter(layer_stl, ['==', ['get', 'god_end'], listValue]);  
+    }
+    if (filterValue === 'tgf') {
+      map.current.setFilter(layer_sta, ['==', ['get', 'tgf'], listValue]);  
+      map.current.setFilter(layer_stp, ['==', ['get', 'tgf'], listValue]);  
+      map.current.setFilter(layer_stl, ['==', ['get', 'tgf'], listValue]);  
+    }
+    if (filterValue === 'nom_1000') {
+      map.current.setFilter(layer_sta, ['==', ['get', 'nom_1000'], listValue]);  
+      map.current.setFilter(layer_stp, ['==', ['get', 'nom_1000'], listValue]);  
+      map.current.setFilter(layer_stl, ['==', ['get', 'nom_1000'], listValue]);  
+    }
+    if (filterValue === 'scale') {
+      map.current.setFilter(layer_sta, ['==', ['get', 'scale'], listValue]);  
+      map.current.setFilter(layer_stp, ['==', ['get', 'scale'], listValue]);  
+      map.current.setFilter(layer_stl, ['==', ['get', 'scale'], listValue]);  
+    }
 
   }
 

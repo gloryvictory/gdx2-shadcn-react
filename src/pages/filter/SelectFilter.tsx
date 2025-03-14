@@ -15,7 +15,7 @@ interface SelectFilterProps {
 }
 
 export function SelectFilter({ onChange }: SelectFilterProps) {
-  const [value, setValue] = React.useState("Метод");
+  const [value, setValue] = React.useState("");
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
@@ -23,9 +23,9 @@ export function SelectFilter({ onChange }: SelectFilterProps) {
   };
 
   return (
-    <Select value={value} onValueChange={handleValueChange}>
+    <Select value={value} onValueChange={handleValueChange} >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Выбрать фильтр" />
+        <SelectValue placeholder="Выберите фильтр" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -33,6 +33,10 @@ export function SelectFilter({ onChange }: SelectFilterProps) {
           <SelectItem value="method">Метод</SelectItem>
           <SelectItem value="vid_iz">Вид изученности</SelectItem>
           <SelectItem value="god_nach">Начало работ</SelectItem>
+          <SelectItem value="god_end">Окончание работ</SelectItem>
+          <SelectItem value="tgf">ТГФ</SelectItem>
+          <SelectItem value="nom_1000">Листы карты</SelectItem>
+          <SelectItem value="scale">Масштаб</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
