@@ -1,5 +1,7 @@
 
 import { Separator } from "@/components/ui/separator";
+// import { useClipboard } from 'react-haiku';
+
 import {
   Sheet,
   SheetContent,
@@ -150,6 +152,11 @@ export default function ReportDrawer({open, onClose, item }:PropsDrawer) {
     fetchData()
   }, []);
 
+  function copyNetworkPath(path: string) {
+    navigator.clipboard.writeText(path)
+      .then(() => alert(`Сетевой путь скопирован: ${path}\nВставьте его в проводник Windows`))
+      .catch(err => console.error('Не удалось скопировать путь:', err));
+  }
 
   return (
           // <div id='mytest' className="max-w-5xl sm:max-w-5xl">
@@ -191,6 +198,20 @@ export default function ReportDrawer({open, onClose, item }:PropsDrawer) {
                   <DescriptionItem title="Вид работ" content={item?.vid_rab} />
                   <DescriptionItem title="Информационный отчет" content={item?.inf_report} />
                   <DescriptionItem title="Ссылка" content={item?.folder_root} />
+                  {/* {console.log(item?.folder_root)} */}
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${item?.folder_root}`)
+                          .then(() => alert('Путь скопирован в буфер обмена'))
+                          .catch(() => alert('Не удалось скопировать путь'));
+                      }}
+                      className={buttonVariants({ variant: "outline", size: "sm" })}
+                    >
+                      Копировать полный путь в буфер обмена
+                    </button>
+                  </div> 
+
                   <DescriptionItem title="Комментарии" content={item?.comments} />
                   <DescriptionItem title="Дата обновления" content={new Date(item?.lastupdate!).toLocaleDateString('ru-RU')} />
                   {isLoading
@@ -205,6 +226,7 @@ export default function ReportDrawer({open, onClose, item }:PropsDrawer) {
                   ? <Spinner size="lg" className="bg-black dark:bg-white" /> 
                   : <DescriptionItemWithMap title="На карте (Полигоны)" content={data ? data.sta_count : 0} item={item} />
                   }
+                 
                 </SheetDescription>
               </SheetHeader>
             </SheetContent>

@@ -80,27 +80,6 @@ export default function MapLibreGL_Map() {
         const features = e?.features
         if(features && features?.length){
           popup.setLngLat(e.lngLat.wrap()).setHTML(`<h1>Отчетов: ${features?.length}</h1>`).addTo(map.getMap());   //map.getMap()
-
-          // const pointId = features[0].properties.id;
-          // console.log(pointId)
-          // // Если точка под курсором изменилась
-          // if (pointId !== hoveredPointId) {
-          //     // Сбрасываем стиль предыдущей точки
-          //     if (hoveredPointId !== null) {
-          //       mapRef?.current?.getMap().setFilter(layer_stp, ['!=', 'id', hoveredPointId]);
-          //     }
-
-          //     // Применяем фильтр для подсветки текущей точки
-          //     mapRef?.current?.getMap().setFilter(layer_stp, ['==', 'id', pointId]);
-
-          //     // Изменяем стиль точки под курсором
-          //     mapRef?.current?.getMap().setPaintProperty(layer_stp, 'circle-color', '#00FF00');
-          //     mapRef?.current?.getMap().setPaintProperty(layer_stp, 'circle-radius', 8);
-
-          //     // Обновляем ID текущей точки
-          //     hoveredPointId = pointId;
-          //   }
-
         }
       // console.log(e)
       });
