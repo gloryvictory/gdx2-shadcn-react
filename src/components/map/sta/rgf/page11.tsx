@@ -83,40 +83,38 @@ export default function StaByRGF() {
   // }
 
   return (
-    <>
-      {isLoading && <Spinner size="lg" className="bg-black dark:bg-white -z-100" /> 
-        // : <h1 className="mt-50  h-5 w-5 absolute right-[50%] left-[50%] top-5 bg-black dark:bg-white -z-100">Blog Post: {slug}</h1>
-      }
-      <Map
-        initialViewState={{
-          longitude: 66,
-          latitude: 66,
-          zoom: 3.5,
-          bearing: 0,
-          pitch: 0
-        }}
+      <>
+        {isLoading && <Spinner size="lg" className="bg-black dark:bg-white -z-100" /> 
+          // : <h1 className="mt-50  h-5 w-5 absolute right-[50%] left-[50%] top-5 bg-black dark:bg-white -z-100">Blog Post: {slug}</h1>
+        }
+        <Map
+          initialViewState={{
+            longitude: 66,
+            latitude: 66,
+            zoom: 3.5,
+            bearing: 0,
+            pitch: 0
+          }}
 
-        style={{ width: "100vw", height: "100vh", left:0, position:"absolute" }}
-        mapStyle={LIGHT_MAP_STYLE}
-        ref={mapRef}
-        onLoad={onMapLoad}
-        // onClick={onMapClick}
-        
-      >
-      {/* <Source {...sta_Source}   >
-        <Layer {...sta_Layer} />
-      </Source>    */}
+          // style={{ width: "100vw", height: "100vh", left:0, position:"absolute" }}
+          style={{ width: "100vw", height: "100vh", left:0, position:"relative" }}
+          mapStyle={LIGHT_MAP_STYLE}
+          ref={mapRef}
+          onLoad={onMapLoad}
+          // onClick={onMapClick}
+          
+        >
+        {/* <Source {...sta_Source}   >
+          <Layer {...sta_Layer} />
+        </Source>    */}
 
-      <FullscreenControl  position="top-right"    style={{ marginRight: 10 }} />
-      <GeolocateControl   position="top-right"    style={{ marginRight: 10 }}/>
-      <NavigationControl  position="top-right"    style={{ marginRight: 10 }}/>
-      <ScaleControl       position="bottom-right" style={{ marginRight: 10 }}/>
+        <FullscreenControl  position="top-right"    style={{ marginRight: 10 }} />
+        <GeolocateControl   position="top-right"    style={{ marginRight: 10 }}/>
+        <NavigationControl  position="top-right"    style={{ marginRight: 10 }}/>
+        <ScaleControl       position="bottom-right" style={{ marginRight: 10 }}/>
 
-      </Map>
-
-
-    </>
-    
+        </Map>
+      </>
   );
 }
 

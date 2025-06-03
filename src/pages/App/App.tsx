@@ -20,6 +20,7 @@ import DataTableVidrab from "@/components/table/vidrab/table-vidrab";
 import DataTableAuthor from "@/components/table/author/table-author";
 import PageMessage from "../message/PageMessage";
 import PageFilter from "../filter/PageFilter";
+import { MapPanels } from "@/components/map/map_panels/MapPanels";
 
 
 // { path: "/", element: <PageHome /> },
@@ -54,6 +55,7 @@ function App() {
             <Route path="/search" element={<PageSearch />} />
             <Route path="/map" element={<PageMap />} />
             <Route path="/map2" element={<MapComponent />} />
+            <Route path="/map3" element={<MapPanels />} />
             <Route path="/table/report" element={<DataTableReport />} />
             <Route path="/table/author" element={<DataTableAuthor />} />
             <Route path="/table/list" element={<DataTableList />} />
