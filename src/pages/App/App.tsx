@@ -7,7 +7,7 @@ import PageHome from "../home/PageHome";
 import PageStat from "../stat/PageStat";
 import PageSearch from "../search/PageSearch";
 import PageMap from "../map/PageMap";
-import MapComponent from "@/components/map/sta/rgf/Map2";
+// import MapComponent from "@/components/map/sta/rgf/Map2";
 import DataTableReport from "@/components/table/report/table-report";
 import DataTableList from "@/components/table/list/table-list";
 import DataTableSubrf from "@/components/table/subrf/table-subrf";
@@ -20,7 +20,7 @@ import DataTableVidrab from "@/components/table/vidrab/table-vidrab";
 import DataTableAuthor from "@/components/table/author/table-author";
 import PageMessage from "../message/PageMessage";
 import PageFilter from "../filter/PageFilter";
-import { MapPanels } from "@/components/map/map_panels/MapPanels";
+import { MapPanels } from "@/components/map/sta/rgf/MapPanels";
 
 
 // { path: "/", element: <PageHome /> },
@@ -54,8 +54,8 @@ function App() {
             <Route path="/stat" element={<PageStat />} />
             <Route path="/search" element={<PageSearch />} />
             <Route path="/map" element={<PageMap />} />
-            <Route path="/map2" element={<MapComponent />} />
-            <Route path="/map3" element={<MapPanels />} />
+            {/* <Route path="/map2" element={<MapComponent />} /> */}
+            <Route path="/map2" element={<MapPanels />} />
             <Route path="/table/report" element={<DataTableReport />} />
             <Route path="/table/author" element={<DataTableAuthor />} />
             <Route path="/table/list" element={<DataTableList />} />

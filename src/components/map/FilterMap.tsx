@@ -8,7 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'; // Не забудьте импорт
 import { layer_name_sta, layer_name_stl, layer_name_stp, sta_Layer, sta_Source, stl_Layer, stl_Source, stp_Layer, stp_Source } from './layers';
 import { Console } from 'console';
 import { LayerProps } from '@vis.gl/react-maplibre';
-import { tableFeature } from './tableFeature';
+import { tableFeature } from './FeatureTablePopup';
 
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`
 const layer_stl = `${gdx2_cfg.gdx2_map_db}.${layer_name_stl}`
