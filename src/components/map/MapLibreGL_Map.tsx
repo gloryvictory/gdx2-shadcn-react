@@ -4,17 +4,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { fieldLayer, fieldSource, layer_name_stl, layer_name_stp, luLayer, luSource, sta_Layer, sta_Source, stl_Layer, stl_Source, stp_Layer, stp_Source } from './layers';
 
 import { LIGHT_MAP_STYLE } from "./basemaps";
-// import { Button } from '@/components/ui/button';
-// import { legend } from './legend';
-// import 'maplibre-gl/dist/maplibre-gl.css';
 
-// import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
-// import { Table as TableIcon} from 'lucide-react';
 import maplibregl, { IControl, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl'; //MapLayerMouseEvent
 import { IDataMap} from '@/types/models';
 import { gdx2_cfg } from '@/config/cfg';
 import TableDrawer from './TableDrawer';
-// import TableDrawer from './TableDrawer';
 import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
 import { legend } from './legend';
 

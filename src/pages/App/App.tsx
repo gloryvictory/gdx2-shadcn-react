@@ -21,6 +21,7 @@ import DataTableAuthor from "@/components/table/author/table-author";
 import PageMessage from "../message/PageMessage";
 import PageFilter from "../filter/PageFilter";
 import { MapPanels } from "@/components/map/sta/rgf/MapPanels";
+import Map3 from "@/components/map/map_panels/Map3";
 
 
 // { path: "/", element: <PageHome /> },
@@ -53,9 +54,9 @@ function App() {
             <Route path="/" element={<PageHome />} />
             <Route path="/stat" element={<PageStat />} />
             <Route path="/search" element={<PageSearch />} />
-            <Route path="/map" element={<PageMap />} />
-            {/* <Route path="/map2" element={<MapComponent />} /> */}
+            <Route path="/map" element={<PageMap />} />            
             <Route path="/map2" element={<MapPanels />} />
+            <Route path="/map3" element={<Map3/>} />
             <Route path="/table/report" element={<DataTableReport />} />
             <Route path="/table/author" element={<DataTableAuthor />} />
             <Route path="/table/list" element={<DataTableList />} />
