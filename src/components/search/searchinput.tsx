@@ -1,30 +1,164 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IReport, IResultReport } from "@/types/models";
 import { gdx2_urls } from "@/config/urls";
 import axios, { AxiosError } from "axios";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Spinner } from "../../components/ui/spinner";
-// import CardReport from "../../components/ui/old/cardreport";
 import ReportDrawer from "./ReportDrawer";
 import MyCard from "./myCard";
-
-
+import { List, Grid, ChevronDown, Filter, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 
 export default function SearchInput() {
-  
   const [inputValue, setInputValue] = React.useState("");
-  const [msgError, setMsgError] = useState<string>('')
-  const [isLoading, setLoading] = useState<boolean>(false)
-  const [initialList, setInitialList] = useState<IReport[]>()
-
+  const [msgError, setMsgError] = useState<string>('');
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<IReport[]>([]);
+  const [filteredResults, setFilteredResults] = useState<IReport[]>([]);
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
+  
+  // Фильтры
+  const [availableYears, setAvailableYears] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
+  const [availableAuthors, setAvailableAuthors] = useState<string[]>([]);
+  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
+  const [availableTGFs, setAvailableTGFs] = useState<string[]>([]);
+  const [selectedTGFs, setSelectedTGFs] = useState<string[]>([]);
+  const [availableAreas, setAvailableAreas] = useState<string[]>([]);
+  const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
+  const [availableSheets, setAvailableSheets] = useState<string[]>([]);
+  const [selectedSheets, setSelectedSheets] = useState<string[]>([]);
+  const [availableWorkTypes, setAvailableWorkTypes] = useState<string[]>([]);
+  const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>([]);
+  const [availableRegions, setAvailableRegions] = useState<string[]>([]);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [curentItem, setCurentItem] = useState<IReport>();
-  
-  
-  const showDrawer = () => {
+  const [currentItem, setCurrentItem] = useState<IReport>();
+
+  // Обновление доступных фильтров
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      const years = [...new Set(searchResults.map(item => item.year_str).filter(Boolean))]
+        .sort((a, b) => b.localeCompare(a));
+      
+      const authors = [...new Set(searchResults.map(item => item.author_name).filter(Boolean))]
+        .sort();
+      
+      const tgfs = [...new Set(searchResults.map(item => item.tgf).filter(Boolean))]
+        .sort();
+      
+      const areas = [...new Set(searchResults.map(item => item.areaoil).filter(Boolean))]
+        .sort((a, b) => parseFloat(a) - parseFloat(b));
+      
+      const sheets = [...new Set(searchResults.map(item => item.list_name).filter(Boolean))]
+        .sort();
+      
+      const workTypes = [...new Set(searchResults.map(item => item.vid_rab).filter(Boolean))]
+        .sort();
+
+      const regions = [...new Set(searchResults.map(item => item.subrf_name).filter(Boolean))]
+        .sort();
+
+      setAvailableYears(years);
+      setAvailableAuthors(authors);
+      setAvailableTGFs(tgfs);
+      setAvailableAreas(areas);
+      setAvailableSheets(sheets);
+      setAvailableWorkTypes(workTypes);
+      setAvailableRegions(regions);
+      setFilteredResults(searchResults);
+    }
+  }, [searchResults]);
+
+  // Применение фильтров
+  useEffect(() => {
+    if (searchResults.length === 0) return;
+    
+    let results = [...searchResults];
+    
+    if (selectedYears.length > 0) {
+      results = results.filter(item => selectedYears.includes(item.year_str));
+    }
+    
+    if (selectedAuthors.length > 0) {
+      results = results.filter(item => selectedAuthors.includes(item.author_name));
+    }
+    
+    if (selectedTGFs.length > 0) {
+      results = results.filter(item => selectedTGFs.includes(item.tgf));
+    }
+    
+    if (selectedAreas.length > 0) {
+      results = results.filter(item => selectedAreas.includes(item.areaoil));
+    }
+    
+    if (selectedSheets.length > 0) {
+      results = results.filter(item => selectedSheets.includes(item.list_name));
+    }
+    
+    if (selectedWorkTypes.length > 0) {
+      results = results.filter(item => selectedWorkTypes.includes(item.vid_rab));
+    }
+
+    if (selectedRegions.length > 0) {
+      results = results.filter(item => selectedRegions.includes(item.subrf_name));
+    }
+    
+    setFilteredResults(results);
+  }, [
+    selectedYears, 
+    selectedAuthors, 
+    selectedTGFs, 
+    selectedAreas, 
+    selectedSheets, 
+    selectedWorkTypes,
+    selectedRegions,
+    searchResults
+  ]);
+
+  const resetFilters = () => {
+    setSelectedYears([]);
+    setSelectedAuthors([]);
+    setSelectedTGFs([]);
+    setSelectedAreas([]);
+    setSelectedSheets([]);
+    setSelectedWorkTypes([]);
+    setSelectedRegions([]);
+    setFilteredResults(searchResults);
+  };
+
+  const handleSearch = async () => {
+    if (!inputValue.trim()) return;
+    
+    setLoading(true);
+    setMsgError('');
+    const url = `${gdx2_urls.gdx2_url_report_search}${inputValue}`;
+    
+    try {
+      const response = await axios.get<IResultReport>(url);
+      setSearchResults(response?.data.data || []);
+      resetFilters();
+    } catch (e: unknown) {
+      const error = e as AxiosError;
+      setMsgError(error.message);
+      setSearchResults([]);
+      setFilteredResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showDrawer = (item: IReport) => {
+    setCurrentItem(item);
     setOpenDrawer(true);
   };
 
@@ -32,83 +166,277 @@ export default function SearchInput() {
     setOpenDrawer(false);
   };
 
-  const onChange = ( e: React.ChangeEvent<HTMLInputElement>) => {
-    
-    setInputValue(e.target.value);
-
-  }
-  
-  const getData = async () => {
-    setLoading(true)
-    const url = `${gdx2_urls.gdx2_url_report_search}${inputValue}`
-    try {
-      const response = await axios.get<IResultReport>(url)
-      setInitialList(response?.data.data)
-    } catch (e: unknown) {
-      const error = e as AxiosError
-      setLoading(false)
-      setMsgError(error.message)
-    }
-    setLoading(false)
-  }
-
-
-  const onPress = ( ) => {
-    getData()
-  }
-
-  const onEnterPress = (e : any) => {
-    if (e.key === 'Enter' || e.keyCode === 13) { onPress()}
-  }
-
-
-  
-
-// width:-webkit-fill-available
   return (
-    <div className={"w-full mt-2"}> 
-    
-    <div className={"flex w-full-5 items-center justify-items-center content-center space-x-2 cursor-pointer"}>
-      <Input
-        aria-label="Поиск"
-        className="flex w-full bg-default-100 text-sm hover:outline-offset-1 hover:ring-2 hover:ring-blue-500/50 focus:ring-blue-500/50 dark:bg-slate-200 dark:text-slate-950"
-        placeholder="Поиск..."
-        type="search"
-        onChange={onChange}
-        value={inputValue}
-        onKeyDown={onEnterPress}
+    <div className="w-full mt-2">
+      {/* Поле поиска */}
+      <div className="flex w-full items-center space-x-2">
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          placeholder="Поиск..."
+          className="flex-1"
         />
-      <Button className="lg:inline-block hover:ring-blue-200/50  bg-slate-500 ring-blue-500/50 dark:text-slate-200" onClick={onPress}>Найти</Button>
-    </div>
-
-      {/* {Вы искали:      <strong>{inputValue.length > 3 ? inputValue : ''}</strong> } */}
-      <div className='flex w-full-5 bg-slate-200 rounded-md p-2 text-center text-sm mt-1 dark:bg-slate-800 dark:hover:bg-slate-500 dark:text-white whitespace-normal' >
-        Найдено отчетов: &nbsp; <strong>{initialList?.length ? ` ${initialList?.length}`: ' ' }</strong>  
-      </div>    
-    
-      { isLoading && 
-        <div className="flex w-full-5 flex-col text-center items-center justify-items-center content-center align-baseline">
-          <Spinner size="lg" className="flex w-full-5  flex-col text-center items-center justify-items-center content-center align-baseline bg-black dark:bg-white" /> 
-        </div>
-      }
-      
-      { msgError && `Error: ${msgError}` }
-      {/* <MyCard/> */}
-
-      <div className="w-full-5 gap-1 grid grid-cols-3 sm:grid-cols-3 2xl:grid-cols-6 mt-1 cursor-pointer">
-        {initialList?.length && initialList?.map((item: IReport ) => (
-          // <CardReport key={item.id} item={item} onClick={()=>{setCurentItem(item); showDrawer(); console.log(item); } }  />
-          <MyCard key={item.id} item={item} onClick={()=>{setCurentItem(item); showDrawer();  console.log(`showDrawer: ${openDrawer} `)} }  />
-        ))
-        // setCurentItem(item); showDrawer()
-        }
+        <Button onClick={handleSearch} disabled={isLoading}>
+          {isLoading ? <Spinner className="mr-2" /> : null}
+          Найти
+        </Button>
       </div>
-      {openDrawer && <ReportDrawer open={openDrawer} onClose={onClose} showDrawer={showDrawer} item={curentItem}/>   }
 
+      {/* Статус поиска */}
+      <div className="flex justify-between items-center mt-2 p-2 bg-muted rounded-md">
+        <div>
+          Найдено: <strong>{filteredResults.length}</strong> из {searchResults.length}
+        </div>
+        <div className="flex space-x-2">
+          <Button 
+            variant={viewMode === "cards" ? "default" : "outline"} 
+            size="sm"
+            onClick={() => setViewMode("cards")}
+          >
+            <Grid className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant={viewMode === "list" ? "default" : "outline"} 
+            size="sm"
+            onClick={() => setViewMode("list")}
+          >
+            <List className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Панель фильтров */}
+      {searchResults.length > 0 && (
+        <div className="mt-3 p-3 bg-muted rounded-md">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-1 overflow-x-auto pb-2">
+              {/* Фильтр по годам */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Год {selectedYears.length > 0 && `(${selectedYears.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableYears.map(year => (
+                    <DropdownMenuCheckboxItem
+                      key={year}
+                      checked={selectedYears.includes(year)}
+                      onCheckedChange={() => setSelectedYears(prev => 
+                        prev.includes(year) ? prev.filter(y => y !== year) : [...prev, year]
+                      )}
+                    >
+                      {year}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по авторам */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Автор {selectedAuthors.length > 0 && `(${selectedAuthors.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableAuthors.map(author => (
+                    <DropdownMenuCheckboxItem
+                      key={author}
+                      checked={selectedAuthors.includes(author)}
+                      onCheckedChange={() => setSelectedAuthors(prev => 
+                        prev.includes(author) ? prev.filter(a => a !== author) : [...prev, author]
+                      )}
+                    >
+                      {author}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по ТГФ */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    ТГФ {selectedTGFs.length > 0 && `(${selectedTGFs.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableTGFs.map(tgf => (
+                    <DropdownMenuCheckboxItem
+                      key={tgf}
+                      checked={selectedTGFs.includes(tgf)}
+                      onCheckedChange={() => setSelectedTGFs(prev => 
+                        prev.includes(tgf) ? prev.filter(t => t !== tgf) : [...prev, tgf]
+                      )}
+                    >
+                      {tgf}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по площади */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Площадь {selectedAreas.length > 0 && `(${selectedAreas.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableAreas.map(area => (
+                    <DropdownMenuCheckboxItem
+                      key={area}
+                      checked={selectedAreas.includes(area)}
+                      onCheckedChange={() => setSelectedAreas(prev => 
+                        prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area]
+                      )}
+                    >
+                      {area}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по листам карты */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Листы {selectedSheets.length > 0 && `(${selectedSheets.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableSheets.map(sheet => (
+                    <DropdownMenuCheckboxItem
+                      key={sheet}
+                      checked={selectedSheets.includes(sheet)}
+                      onCheckedChange={() => setSelectedSheets(prev => 
+                        prev.includes(sheet) ? prev.filter(s => s !== sheet) : [...prev, sheet]
+                      )}
+                    >
+                      {sheet}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по виду работ */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Вид работ {selectedWorkTypes.length > 0 && `(${selectedWorkTypes.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableWorkTypes.map(workType => (
+                    <DropdownMenuCheckboxItem
+                      key={workType}
+                      checked={selectedWorkTypes.includes(workType)}
+                      onCheckedChange={() => setSelectedWorkTypes(prev => 
+                        prev.includes(workType) ? prev.filter(w => w !== workType) : [...prev, workType]
+                      )}
+                    >
+                      {workType}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по субъектам РФ */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    Субъект РФ {selectedRegions.length > 0 && `(${selectedRegions.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableRegions.map(region => (
+                    <DropdownMenuCheckboxItem
+                      key={region}
+                      checked={selectedRegions.includes(region)}
+                      onCheckedChange={() => setSelectedRegions(prev => 
+                        prev.includes(region) ? prev.filter(r => r !== region) : [...prev, region]
+                      )}
+                    >
+                      {region}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Кнопка сброса фильтров */}
+            {(selectedYears.length > 0 || selectedAuthors.length > 0 || selectedTGFs.length > 0 || 
+              selectedAreas.length > 0 || selectedSheets.length > 0 || selectedWorkTypes.length > 0 ||
+              selectedRegions.length > 0) && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={resetFilters}
+                className="whitespace-nowrap text-destructive hover:text-destructive"
+              >
+                <X className="h-3 w-3 mr-1" />
+                Сбросить
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Результаты */}
+      {isLoading ? (
+        <div className="flex justify-center mt-4">
+          <Spinner size="lg" />
+        </div>
+      ) : msgError ? (
+        <div className="text-destructive mt-4">{msgError}</div>
+      ) : viewMode === "cards" ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
+          {filteredResults.map(item => (
+            <MyCard 
+              key={item.id} 
+              item={item} 
+              onClick={() => showDrawer(item)} 
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-2 mt-4">
+          {filteredResults.map(item => (
+            <div 
+              key={item.id}
+              className="p-4 border rounded-lg hover:bg-accent cursor-pointer"
+              onClick={() => showDrawer(item)}
+            >
+              <h3 className="font-medium">{item.report_name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {item.author_name && `${item.author_name}, `}
+                {item.year_str}
+                {item.tgf && `, ТГФ: ${item.tgf}`}
+                {item.areaoil && `, Площадь: ${item.areaoil}`}
+                {item.subrf_name && `, ${item.subrf_name}`}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Детали отчета */}
+      {openDrawer && (
+        <ReportDrawer 
+          open={openDrawer} 
+          onClose={onClose} 
+          item={currentItem}
+        />
+      )}
     </div>
-    
   );
 }
-// CardHeader
-
-
