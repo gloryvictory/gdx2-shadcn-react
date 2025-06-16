@@ -11,7 +11,7 @@ export const BtnRefresh = () => {
     >
       <div className="flex">
         <RotateCcw className="size-5" />
-        <span className="block lg:hidden"> Refresh </span>
+        {/* <span className="block lg:hidden"> Refresh </span> */}
       </div>
       {/* <span className="sr-only">Refresh</span> */}
     </Button>

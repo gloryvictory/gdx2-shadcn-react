@@ -13,10 +13,14 @@ import { tableFeature } from './FeatureTablePopup';
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`
 const layer_stl = `${gdx2_cfg.gdx2_map_db}.${layer_name_stl}`
 const layer_stp = `${gdx2_cfg.gdx2_map_db}.${layer_name_stp}`
+console.log("layer_sta", layer_sta)
 
-const sta_source_id:string = sta_Source?.id!;
-const stl_source_id:string = stl_Source?.id!;
-const stp_source_id:string = stp_Source?.id!;
+// const sta_source_id:string = sta_Source?.url!;
+// const stl_source_id:string = stl_Source?.url!;
+// const stp_source_id:string = stp_Source?.url!;
+const sta_source_id:string = layer_sta;
+const stl_source_id:string = layer_stl;
+const stp_source_id:string = layer_stp;
 
 
 
@@ -114,6 +118,7 @@ function FilterMap({selectFilter, selectList}: FilterMapProps) {
 
     map?.current?.addControl(nav, 'bottom-right');
     // console.log("map?.current?.on('load', handleOnMapLoad)")
+    console.log("sta_source_id", sta_source_id)
 
     map.current?.addSource(sta_source_id, sta_Source); // Добавляем слой  
     const sta_Layer1: LayerProps = sta_Layer! 

@@ -41,9 +41,9 @@ export function MapPanels() {
   const sta_rgf_SearchParam = searchParams.get("stargf")
   const stl_rgf_SearchParam = searchParams.get("stlrgf")
   const stp_rgf_SearchParam = searchParams.get("stprgf")
-  const sta_source_id:string = sta_Source?.id!;
-  const stl_source_id:string = stl_Source?.id!;
-  const stp_source_id:string = stp_Source?.id!;
+  const sta_source_id:string = layer_sta ;//sta_Source?.id!;
+  const stl_source_id:string = layer_stl;//stl_Source?.id!;
+  const stp_source_id:string = layer_stp;//stp_Source?.id!;
 
 
   const mapMouseEnter = ( e:  MapMouseEvent & { features?: MapGeoJSONFeature[] | undefined; } & Object) => {

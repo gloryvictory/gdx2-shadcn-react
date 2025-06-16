@@ -126,9 +126,9 @@ const setupMapEvents = (
   map.on('mouseenter', layerSTP, handleMouseEnter);
   map.on('mouseleave', layerSTP, handleMouseLeave);
   map.on('click', layerSTP, handleClick);
-  map.on('click', 'test_layer', handleTestLayerClick);
-  map.on('mouseenter', 'test_layer', handleTestLayerMouseEnter);
-  map.on('mouseleave', 'test_layer', handleTestLayerMouseLeave);
+  // map.on('click', 'test_layer', handleTestLayerClick);
+  // map.on('mouseenter', 'test_layer', handleTestLayerMouseEnter);
+  // map.on('mouseleave', 'test_layer', handleTestLayerMouseLeave);
 
   if (map.getLayer(layerSTP)) {
     map.moveLayer(layerSTP);
@@ -172,10 +172,10 @@ const setupMapEvents = (
     map.off('mouseenter', layerSTP, handleMouseEnter);
     map.off('mouseleave', layerSTP, handleMouseLeave);
     map.off('click', layerSTP, handleClick);
-    map.off('click', 'test_layer', handleTestLayerClick);
-    map.off('mouseenter', 'test_layer', handleTestLayerMouseEnter);
-    map.off('mouseleave', 'test_layer', handleTestLayerMouseLeave);
-    map.off('sourcedata');
+    // map.off('click', 'test_layer', handleTestLayerClick);
+    // map.off('mouseenter', 'test_layer', handleTestLayerMouseEnter);
+    // map.off('mouseleave', 'test_layer', handleTestLayerMouseLeave);
+    // map.off('sourcedata');
     if (map.getMap().hasControl(legend as unknown as IControl)) {
       map.removeControl(legend as unknown as IControl);
     }

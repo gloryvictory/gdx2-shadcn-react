@@ -11,7 +11,7 @@ export const BtnInfo = () => {
     >
       <div className="flex">
         <Info className="size-5" />
-        <span className="block lg:hidden"> Info </span>
+        {/* <span className="block lg:hidden"> Info </span> */}
       </div>
       {/* <span className="sr-only">Info</span> */}
     </Button>

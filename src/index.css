@@ -100,3 +100,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Для плавного появления подчеркивания
+@keyframes underline {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.group:hover .underline-animation {
+  animation: underline 0.3s ease forwards;
+} */

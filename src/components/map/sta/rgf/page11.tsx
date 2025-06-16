@@ -54,7 +54,7 @@ export default function StaByRGF() {
       ];
       
       setLoading(true)
-      const sta_id:string = sta_Source?.id!;
+      const sta_id:string = layer_sta; //sta_Source?.id!;
       map?.addSource(sta_id, sta_Source); // Добавляем слой  
       const sta_Layer1: LayerProps = sta_Layer! 
       map?.addLayer(sta_Layer1 as AddLayerObject); // Add the layer
