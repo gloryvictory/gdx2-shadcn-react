@@ -20,7 +20,7 @@ import { toast } from "sonner";
 type PropsDrawer = {
   open: boolean,
   onClose: () => void,
-  showDrawer: () => void, 
+  // showDrawer?: () => void, 
   item: IReport | undefined
 }
 
