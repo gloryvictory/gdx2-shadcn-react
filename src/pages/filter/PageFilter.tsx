@@ -93,9 +93,9 @@ function PageFilter() {
           <ResizablePanel defaultSize={25} className="overflow-hidden flex flex-col">
             <Tabs defaultValue="stp" className="h-full flex flex-col">
               <TabsList className="grid grid-cols-3">
-                <TabsTrigger value="stp">STP ({rowData.stp.length})</TabsTrigger>
-                <TabsTrigger value="stl">STL ({rowData.stl.length})</TabsTrigger>
-                <TabsTrigger value="sta">STA ({rowData.sta.length})</TabsTrigger>
+                <TabsTrigger value="stp">Точки (STP) ({rowData.stp.length})</TabsTrigger>
+                <TabsTrigger value="stl">Линии (STL) ({rowData.stl.length})</TabsTrigger>
+                <TabsTrigger value="sta">Полигоны (STA) ({rowData.sta.length})</TabsTrigger>
               </TabsList>
               
               <TabsContent value="stp" className="flex-1 overflow-hidden">

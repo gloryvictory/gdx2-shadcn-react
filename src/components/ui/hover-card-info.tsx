@@ -8,7 +8,10 @@ import { nanoid } from "nanoid"
 import { CalendarDays } from "lucide-react"
 
 const updates = [
-  { date: '16.06.2025', description: 'Экспорт таблицы в csv и буфер обмена' },
+  { date: '01.07.2025', description: 'Вкладки на карте' },
+  { date: '01.07.2025', description: 'Копирование таблицы в буфер обмена' },
+  { date: '01.07.2025', description: 'Таблицы на карте с филтра' },
+  { date: '01.07.2025', description: 'Экспорт таблицы в csv и буфер обмена' },
   { date: '16.06.2025', description: 'Копирование пути отчета в буфер обмена' },
   { date: '01.03.2025', description: 'Переход на карту' },
   { date: '01.03.2025', description: 'Пожелания' },

@@ -9,13 +9,15 @@ import { Button } from "../../components/ui/button";
 import { Spinner } from "../../components/ui/spinner";
 import ReportDrawer from "./ReportDrawer";
 import MyCard from "./myCard";
-import { List, Grid, ChevronDown, Filter, X } from "lucide-react";
+import { List, Grid, Table2, ChevronDown, Filter, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import * as XLSX from "xlsx";
+import { toast } from "sonner";
 
 export default function SearchInput() {
   const [inputValue, setInputValue] = React.useState("");
@@ -23,7 +25,7 @@ export default function SearchInput() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState<IReport[]>([]);
   const [filteredResults, setFilteredResults] = useState<IReport[]>([]);
-  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
+  const [viewMode, setViewMode] = useState<"cards" | "list" | "table">("cards");
   
   // Фильтры
   const [availableYears, setAvailableYears] = useState<string[]>([]);
@@ -202,6 +204,13 @@ export default function SearchInput() {
             onClick={() => setViewMode("list")}
           >
             <List className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={viewMode === "table" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("table")}
+          >
+            <Table2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -408,7 +417,7 @@ export default function SearchInput() {
             />
           ))}
         </div>
-      ) : (
+      ) : viewMode === "list" ? (
         <div className="space-y-2 mt-4">
           {filteredResults.map(item => (
             <div 
@@ -426,6 +435,113 @@ export default function SearchInput() {
               </p>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="overflow-x-auto mt-4">
+          <div className="flex gap-2 mb-2">
+            <Button size="sm" variant="outline" onClick={() => {
+              // Копировать в буфер обмена
+              const header = ['№', 'Название отчета', 'Авторы', 'Организация', 'Год окончания работ', '№ отчета в РГФ', '№ отчета в Тюменском ТГФ', 'Ссылка'];
+              const rows = filteredResults.map((item, idx) => [
+                idx + 1,
+                item.report_name,
+                item.author_name,
+                item.org_name,
+                item.year_str,
+                item.rgf,
+                item.tgf_tmn,
+                item.folder_root || ''
+              ]);
+              const escapeCell = (cell: any) => {
+                const str = String(cell ?? '');
+                if (str.length > 30) {
+                  return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+              };
+              const text = [header, ...rows].map(row => row.map(escapeCell).join('\t')).join('\n');
+              navigator.clipboard.writeText(text);
+              toast.success('Скопировано в буфер обмена');
+            }}>
+              Копировать в буфер обмена
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => {
+              // Экспорт в CSV с BOM и разделителем ;
+              const header = ['№', 'Название отчета', 'Авторы', 'Организация', 'Год окончания работ', '№ отчета в РГФ', '№ отчета в Тюменском ТГФ', 'Ссылка'];
+              const rows = filteredResults.map((item, idx) => [
+                idx + 1,
+                item.report_name,
+                item.author_name,
+                item.org_name,
+                item.year_str,
+                item.rgf,
+                item.tgf_tmn,
+                item.folder_root || ''
+              ]);
+              const csv = '\uFEFF' + [header, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';')).join('\r\n');
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'reports.csv';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}>
+              Экспорт в CSV
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => {
+              // Экспорт в Excel (xlsx)
+              const header = ['№', 'Название отчета', 'Авторы', 'Организация', 'Год окончания работ', '№ отчета в РГФ', '№ отчета в Тюменском ТГФ', 'Ссылка'];
+              const rows = filteredResults.map((item, idx) => [
+                idx + 1,
+                item.report_name,
+                item.author_name,
+                item.org_name,
+                item.year_str,
+                item.rgf,
+                item.tgf_tmn,
+                item.folder_root || ''
+              ]);
+              const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+              const wb = XLSX.utils.book_new();
+              XLSX.utils.book_append_sheet(wb, ws, 'Reports');
+              XLSX.writeFile(wb, 'reports.xlsx');
+            }}>
+              Экспорт в Excel
+            </Button>
+          </div>
+          <table className="min-w-full border text-sm bg-background">
+            <thead>
+              <tr>
+                <th className="border px-2 py-1">№</th>
+                <th className="border px-2 py-1">Название отчета</th>
+                <th className="border px-2 py-1">Авторы</th>
+                <th className="border px-2 py-1">Организация</th>
+                <th className="border px-2 py-1">Год окончания работ</th>
+                <th className="border px-2 py-1">№ отчета в РГФ</th>
+                <th className="border px-2 py-1">№ отчета в Тюменском ТГФ</th>
+                <th className="border px-2 py-1">Ссылка</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredResults.map((item, idx) => (
+                <tr key={item.id} className="hover:bg-accent cursor-pointer" onClick={() => showDrawer(item)}>
+                  <td className="border px-2 py-1">{idx + 1}</td>
+                  <td className="border px-2 py-1">{item.report_name}</td>
+                  <td className="border px-2 py-1">{item.author_name}</td>
+                  <td className="border px-2 py-1">{item.org_name}</td>
+                  <td className="border px-2 py-1">{item.year_str}</td>
+                  <td className="border px-2 py-1">{item.rgf}</td>
+                  <td className="border px-2 py-1">{item.tgf_tmn}</td>
+                  <td className="border px-2 py-1">
+                    {item.folder_root || ''}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 

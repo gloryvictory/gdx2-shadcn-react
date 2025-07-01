@@ -20,7 +20,6 @@ import { toast } from "sonner";
 type PropsDrawer = {
   open: boolean,
   onClose: () => void,
-  // showDrawer?: () => void, 
   item: IReport | undefined
 }
 
@@ -132,9 +131,50 @@ export default function ReportDrawer({open, onClose, item }: PropsDrawer) {
   }, []);
 
   function copyNetworkPath(path: string) {
+    if (!path) {
+      toast.error('Путь для копирования не указан');
+      return;
+    }
+
+    // Fallback для браузеров без Clipboard API
+    const fallbackCopy = () => {
+      const textarea = document.createElement('textarea');
+      textarea.value = path;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          toast.success(`Сетевой путь скопирован: ${path}`);
+        } else {
+          throw new Error('execCommand failed');
+        }
+      } catch (err) {
+        toast.error(`Не удалось скопировать путь: ${err instanceof Error ? err.message : String(err)}`);
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    };
+
+    // Проверяем доступность Clipboard API
+    if (!navigator.clipboard) {
+      fallbackCopy();
+      return;
+    }
+
+    // Пытаемся использовать современный API
     navigator.clipboard.writeText(path)
-      .then(() => toast.success(`Сетевой путь скопирован: ${path}`))
-      .catch(() => toast.error('Не удалось скопировать путь'));
+      .then(() => {
+        toast.success(`Сетевой путь скопирован: ${path}`);
+      })
+      .catch((err) => {
+        console.error('Clipboard API error:', err);
+        // Если современный API не сработал, пробуем fallback
+        fallbackCopy();
+      });
   }
 
   return (
@@ -175,9 +215,9 @@ export default function ReportDrawer({open, onClose, item }: PropsDrawer) {
             <DescriptionItem title="Информационный отчет" content={item?.inf_report} />
             <DescriptionItem title="Ссылка" content={item?.folder_root} />
             
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-4 mb-4">
               <button
-                onClick={() => copyNetworkPath(`${item?.folder_root}`)}
+                onClick={() => copyNetworkPath(item?.folder_root || '')}
                 className={buttonVariants({ variant: "outline", size: "sm" })}
               >
                 Копировать полный путь в буфер обмена
