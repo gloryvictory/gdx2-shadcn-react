@@ -42,6 +42,8 @@ export default function SearchInput() {
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>([]);
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [availableTGFTyumen, setAvailableTGFTyumen] = useState<string[]>([]);
+  const [selectedTGFTyumen, setSelectedTGFTyumen] = useState<string[]>([]);
   
   const [openDrawer, setOpenDrawer] = useState(false);
   const [currentItem, setCurrentItem] = useState<IReport>();
@@ -56,6 +58,9 @@ export default function SearchInput() {
         .sort();
       
       const tgfs = [...new Set(searchResults.map(item => item.tgf).filter(Boolean))]
+        .sort();
+      
+      const tgfTyumen = [...new Set(searchResults.map(item => item.tgf_tmn).filter(Boolean))]
         .sort();
       
       const areas = [...new Set(searchResults.map(item => item.areaoil).filter(Boolean))]
@@ -73,6 +78,7 @@ export default function SearchInput() {
       setAvailableYears(years);
       setAvailableAuthors(authors);
       setAvailableTGFs(tgfs);
+      setAvailableTGFTyumen(tgfTyumen);
       setAvailableAreas(areas);
       setAvailableSheets(sheets);
       setAvailableWorkTypes(workTypes);
@@ -99,6 +105,10 @@ export default function SearchInput() {
       results = results.filter(item => selectedTGFs.includes(item.tgf));
     }
     
+    if (selectedTGFTyumen.length > 0) {
+      results = results.filter(item => selectedTGFTyumen.includes(item.tgf_tmn));
+    }
+    
     if (selectedAreas.length > 0) {
       results = results.filter(item => selectedAreas.includes(item.areaoil));
     }
@@ -120,6 +130,7 @@ export default function SearchInput() {
     selectedYears, 
     selectedAuthors, 
     selectedTGFs, 
+    selectedTGFTyumen,
     selectedAreas, 
     selectedSheets, 
     selectedWorkTypes,
@@ -131,6 +142,7 @@ export default function SearchInput() {
     setSelectedYears([]);
     setSelectedAuthors([]);
     setSelectedTGFs([]);
+    setSelectedTGFTyumen([]);
     setSelectedAreas([]);
     setSelectedSheets([]);
     setSelectedWorkTypes([]);
@@ -190,29 +202,31 @@ export default function SearchInput() {
         <div>
           Найдено: <strong>{filteredResults.length}</strong> из {searchResults.length}
         </div>
-        <div className="flex space-x-2">
-          <Button 
-            variant={viewMode === "cards" ? "default" : "outline"} 
-            size="sm"
-            onClick={() => setViewMode("cards")}
-          >
-            <Grid className="h-4 w-4" />
-          </Button>
-          <Button 
-            variant={viewMode === "list" ? "default" : "outline"} 
-            size="sm"
-            onClick={() => setViewMode("list")}
-          >
-            <List className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "table" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("table")}
-          >
-            <Table2 className="h-4 w-4" />
-          </Button>
-        </div>
+        {searchResults.length > 0 && (
+          <div className="flex space-x-2">
+            <Button 
+              variant={viewMode === "cards" ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setViewMode("cards")}
+            >
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant={viewMode === "list" ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "table" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("table")}
+            >
+              <Table2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Панель фильтров */}
@@ -284,6 +298,29 @@ export default function SearchInput() {
                       )}
                     >
                       {tgf}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Фильтр по № отчета в Тюменском ТГФ */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-1 whitespace-nowrap">
+                    № ТюмТГФ {selectedTGFTyumen.length > 0 && `(${selectedTGFTyumen.length})`}
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="max-h-60 w-48 overflow-y-auto">
+                  {availableTGFTyumen.map(tgf_tmn => (
+                    <DropdownMenuCheckboxItem
+                      key={tgf_tmn}
+                      checked={selectedTGFTyumen.includes(tgf_tmn)}
+                      onCheckedChange={() => setSelectedTGFTyumen(prev =>
+                        prev.includes(tgf_tmn) ? prev.filter(t => t !== tgf_tmn) : [...prev, tgf_tmn]
+                      )}
+                    >
+                      {tgf_tmn}
                     </DropdownMenuCheckboxItem>
                   ))}
                 </DropdownMenuContent>
@@ -384,8 +421,8 @@ export default function SearchInput() {
 
             {/* Кнопка сброса фильтров */}
             {(selectedYears.length > 0 || selectedAuthors.length > 0 || selectedTGFs.length > 0 || 
-              selectedAreas.length > 0 || selectedSheets.length > 0 || selectedWorkTypes.length > 0 ||
-              selectedRegions.length > 0) && (
+              selectedTGFTyumen.length > 0 || selectedAreas.length > 0 || selectedSheets.length > 0 ||
+              selectedWorkTypes.length > 0 || selectedRegions.length > 0) && (
               <Button 
                 variant="ghost" 
                 size="sm"
