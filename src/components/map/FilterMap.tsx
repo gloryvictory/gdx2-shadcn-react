@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
 import maplibregl, { AddLayerObject, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import { gdx2_cfg } from '@/config/cfg';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -6,6 +6,7 @@ import { layer_name_sta, layer_name_stl, layer_name_stp, sta_Layer, sta_Source, 
 import { tableFeature } from './FeatureTablePopup';
 import { useFilteredFeaturesStore } from '@/store/filterStore';
 import { LayerProps } from '@vis.gl/react-maplibre';
+import React from 'react';
 
 const layer_sta = `${gdx2_cfg.gdx2_map_db}.${layer_name_sta}`;
 const layer_stl = `${gdx2_cfg.gdx2_map_db}.${layer_name_stl}`;
@@ -18,14 +19,25 @@ const stp_source_id: string = layer_stp;
 interface FilterMapProps {
   selectFilter: string;
   selectList: string;
+  onRefresh?: () => void;
+  onMarkerSet?: () => void;
 }
 
-function FilterMap({ selectFilter, selectList }: FilterMapProps) {
+export interface FilterMapRef {
+  refreshTables: () => void;
+}
+
+const FilterMap = forwardRef<FilterMapRef, FilterMapProps>(function FilterMap(
+  { selectFilter, selectList, onMarkerSet },
+  ref
+) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const { setFilteredFeatures, setStp, setStl, setSta } = useFilteredFeaturesStore();
   const isStyleLoaded = useRef(false);
   const markerRef = useRef<maplibregl.Marker | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const [isMapLoading, setIsMapLoading] = React.useState(true);
 
   const popup = new maplibregl.Popup({
     closeButton: true,
@@ -72,6 +84,11 @@ function FilterMap({ selectFilter, selectList }: FilterMapProps) {
       .addTo(map.current);
 
     markerRef.current = marker;
+
+    // Сообщаем родителю, что маркер был поставлен
+    if (typeof onMarkerSet === 'function') {
+      onMarkerSet();
+    }
 
     // Получаем все объекты под точкой клика
     const features = map.current.queryRenderedFeatures(e.point, {
@@ -121,6 +138,8 @@ function FilterMap({ selectFilter, selectList }: FilterMapProps) {
       zoom: 3
     });
 
+    setIsMapLoading(true);
+
     map.current.on('load', () => {
       // Добавляем контролы
       map.current?.addControl(nav, 'bottom-right');
@@ -146,10 +165,9 @@ function FilterMap({ selectFilter, selectList }: FilterMapProps) {
       map.current?.on('mouseleave', layer_stl, mapMouseLeave);
       map.current?.on('mouseleave', layer_stp, mapMouseLeave);
       map.current?.on('click', handleMapClick);
-    });
 
-    map.current.on('style.load', () => {
       isStyleLoaded.current = true;
+      setIsMapLoading(false);
     });
 
     return () => {
@@ -167,6 +185,21 @@ function FilterMap({ selectFilter, selectList }: FilterMapProps) {
   // Обработка фильтров
   useEffect(() => {
     if (!map?.current || !isStyleLoaded.current) return;
+
+    // Сбросить маркер при смене фильтра
+    if (markerRef.current) {
+      markerRef.current.remove();
+      markerRef.current = null;
+    }
+
+    // Если фильтр не выбран или значение явно пустое — сбросить store и выйти
+    if (!selectFilter || selectList === '' || selectList === null || typeof selectList === 'undefined') {
+      setSta([]);
+      setStp([]);
+      setStl([]);
+      setFilteredFeatures([]);
+      return;
+    }
 
     // Очищаем все фильтры
     map.current.setFilter(layer_sta, null);
@@ -213,7 +246,68 @@ function FilterMap({ selectFilter, selectList }: FilterMapProps) {
     }
   }, [selectFilter, selectList]);
 
-  return <div ref={mapContainer} style={{ width: "100%", height: "100%", left: 0 }} />;
-}
+  const refreshTables = useCallback(() => {
+    if (!map.current || !isStyleLoaded.current || !selectFilter || selectList === '' || selectList === null || typeof selectList === 'undefined') {
+      setSta([]);
+      setStp([]);
+      setStl([]);
+      setFilteredFeatures([]);
+      return;
+    }
+    const staFeatures = map.current?.queryRenderedFeatures({ layers: [layer_sta] }) || [];
+    const stpFeatures = map.current?.queryRenderedFeatures({ layers: [layer_stp] }) || [];
+    const stlFeatures = map.current?.queryRenderedFeatures({ layers: [layer_stl] }) || [];
+
+    const staData = staFeatures.map(f => ({
+      id: f.id ?? f.properties?.id ?? Math.random(),
+      properties: f.properties,
+      geometry: f.geometry,
+      source: 'sta',
+    }));
+    const stpData = stpFeatures.map(f => ({
+      id: f.id ?? f.properties?.id ?? Math.random(),
+      properties: f.properties,
+      geometry: f.geometry,
+      source: 'stp',
+    }));
+    const stlData = stlFeatures.map(f => ({
+      id: f.id ?? f.properties?.id ?? Math.random(),
+      properties: f.properties,
+      geometry: f.geometry,
+      source: 'stl',
+    }));
+
+    setSta(staData);
+    setStp(stpData);
+    setStl(stlData);
+    setFilteredFeatures([...staData, ...stpData, ...stlData]);
+  }, [map, isStyleLoaded, selectFilter, selectList, setSta, setStp, setStl, setFilteredFeatures]);
+
+  useImperativeHandle(ref, () => ({
+    refreshTables,
+  }));
+
+  return (
+    <div style={{ width: "100%", height: "100%", left: 0, position: 'relative' }}>
+      <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />
+      {(isMapLoading || loading) && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(255,255,255,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10
+        }}>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+        </div>
+      )}
+    </div>
+  );
+});
 
 export default FilterMap;

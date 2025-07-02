@@ -8,6 +8,7 @@ import { nanoid } from "nanoid"
 import { CalendarDays } from "lucide-react"
 
 const updates = [
+  { date: '02.07.2025', description: 'Кнопка обновления таблиц с карты и экспорт в Excel' },
   { date: '01.07.2025', description: 'Вкладки на карте' },
   { date: '01.07.2025', description: 'Копирование таблицы в буфер обмена' },
   { date: '01.07.2025', description: 'Таблицы на карте с филтра' },
