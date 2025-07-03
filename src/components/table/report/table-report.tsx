@@ -10,6 +10,8 @@ import { IListReport,IResultReport } from '@/types/models';
 import axios, { AxiosError } from 'axios';
 import { Spinner } from '@/components/ui/spinner';
 import "./styles.css";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -49,7 +51,7 @@ const DataTableReport = () => {
     { headerName: "№ МорскойТГФ",     field: "tgf_more",        filter: true, sortable: true, resizable: true },
     { headerName: "№ ТюмТГФ",         field: "tgf_tmn",         filter: true, sortable: true, resizable: true },
     { headerName: "№ КурганТГФ",      field: "tgf_kurgan",      filter: true, sortable: true, resizable: true },
-    
+    { headerName: "Ошибка",           field: "error",           filter: true, sortable: true, resizable: true },
   ]);
   
   
@@ -66,7 +68,7 @@ const DataTableReport = () => {
   // }, []);
   async function fetchData() {
     const url = `${gdx2_urls.gdx2_url_report_all}`
-    console.log(url)
+    // console.log(url)
     try {
       setError('')
       setLoading(true)     
@@ -80,7 +82,27 @@ const DataTableReport = () => {
         let resultArr: Array<IListReport> = [];
         
         data2.forEach((item) => {
-          // const last: string =  item?.lastupdate?.toString()!
+          // console.log('DEBUG:', { id: item?.id, report_name: item?.report_name, type: typeof item?.report_name });
+          // if (item?.id === 5963) {
+          //   console.log('DEBUG 5963:', {
+          //     value: item.report_name,
+          //     type: typeof item.report_name,
+          //     isEmptyString: item.report_name === '',
+          //     isNull: item.report_name == null,
+          //     trimmed: typeof item.report_name === 'string' ? item.report_name.trim() : undefined,
+          //     replaced: typeof item.report_name === 'string' ? item.report_name.replace(/\s|\u00A0/g, '') : undefined,
+          //     length: typeof item.report_name === 'string' ? item.report_name.length : undefined,
+          //     raw: item.report_name
+          //   });
+          // }
+          // Усиленная проверка: ошибка, если поле 'Наименование' (report_name) отсутствует, не строка или состоит только из пробелов/невидимых символов
+          const isError =
+            !item?.report_name ||
+            typeof item.report_name !== 'string' ||
+            item.report_name.replace(/\s|\u00A0/g, '') === '';
+          if (isError) {
+            console.log('Ошибка в строке:', item.id, 'report_name:', JSON.stringify(item.report_name));
+          }
           resultArr.push({
             id: item?.id,
             report_name: item?.report_name,
@@ -110,16 +132,19 @@ const DataTableReport = () => {
             org_name: item?.org_name,
             zsniigg_report: item?.zsniigg_report,
             comments: item?.comments,
-            
-            error: "OK",
+            error: isError ? 'error' : 'OK',
             lastupdate: new Date(item?.lastupdate?.toString()!).toLocaleDateString('ru-RU'),
           });
         });
               
-        window.localStorage.setItem(url, JSON.stringify(resultArr));
+        // window.localStorage.setItem(url, JSON.stringify(resultArr));
         // console.log(resultArr);
         setRowData(resultArr)  
         // console.log(rowData);
+        if (Array.isArray(data2)) {
+          console.log('ВСЕ ID:', data2.map(item => item.id));
+          console.log('Первые 5 строк:', data2.slice(0, 5));
+        }
       }
       setLoading(false)
     } catch (e: unknown) {
@@ -136,9 +161,13 @@ const DataTableReport = () => {
   const rowClassRules = useMemo(() => {
     return {
       // row style function
-      "sick-days-warning": (params:any) => {
-        const error_str:string = params.data.error;
-        return error_str.includes('error') ;
+      "row-error": (params: any) => {
+        const error_str: string = params.data.error;
+        return error_str === 'error';
+      },
+      "sick-days-warning": (params: any) => {
+        const error_str: string = params.data.error;
+        return error_str.includes('error');
       },
     };
   }, []);
@@ -148,21 +177,47 @@ const DataTableReport = () => {
     <>
     { loading && 
         <div className="flex w-full-5 flex-col text-center items-center justify-items-center content-center align-baseline">
-          <Spinner size="lg" className="flex w-full-5  flex-col text-center items-center justify-items-center content-center align-baseline bg-black dark:bg-white" /> 
+          <Spinner size="lg" className="flex w-full-5 flex-col text-center items-center justify-items-center content-center align-baseline bg-black dark:bg-white" /> 
         </div>
       }
       { error && `Error: ${error}` }
       <div className='container w-full h-screen mt-2'>
-      <AgGridReact 
-        rowData={rowData} 
-        columnDefs={columnDefs}  
-        rowClassRules={rowClassRules}
-        pagination={pagination}
-        paginationPageSize={paginationPageSize}
-        paginationPageSizeSelector={paginationPageSizeSelector}/>
-    </div>
+        <div className="mb-4">
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            onClick={() => {
+              const errors = rowData.filter(row => row.error && row.error !== 'OK');
+              if (errors.length === 0) return;
+              const header = Object.keys(errors[0]) as (keyof typeof errors[0])[];
+              const rows = errors.map(row => header.map(h => (row as Partial<typeof row>)[h] ?? ''));
+              const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+              const wb = XLSX.utils.book_new();
+              XLSX.utils.book_append_sheet(wb, ws, 'Ошибки');
+              const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+              saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'errors.xlsx');
+            }}
+            disabled={rowData.filter(row => row.error && row.error !== 'OK').length === 0}
+          >
+            Экспорт ошибок в Excel
+          </button>
+        </div>
+        <div style={{ height: 'calc(100% - 56px)' }}>
+          <AgGridReact 
+            rowData={rowData} 
+            columnDefs={columnDefs}  
+            rowClassRules={rowClassRules}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}/>
+        </div>
+      </div>
     </>
   );
 };
 
 export default DataTableReport;
+
+// /* styles.css */
+// .row-error {
+//   background-color: #ffeaea !important;
+// }

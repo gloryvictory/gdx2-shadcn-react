@@ -7,6 +7,8 @@ import { IData, IList, IResult } from '@/types/models';
 import axios, { AxiosError } from 'axios';
 import { Spinner } from '@/components/ui/spinner';
 import "./styles.css";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -55,7 +57,7 @@ const DataTableOrg = () => {
           });
         });
               
-        window.localStorage.setItem(url, JSON.stringify(errorArr));
+        // window.localStorage.setItem(url, JSON.stringify(errorArr));
         setRowData(errorArr)  
         // console.log(rowData);
       }
@@ -92,14 +94,31 @@ const DataTableOrg = () => {
       }
       { error && `Error: ${error}` }
       <div className='container w-full h-screen mt-2'>
-      <AgGridReact 
-        rowData={rowData} 
-        columnDefs={columnDefs}  
-        rowClassRules={rowClassRules}
-        pagination={pagination}
-        paginationPageSize={paginationPageSize}
-        paginationPageSizeSelector={paginationPageSizeSelector}/>
-    </div>
+        <button
+          className="mb-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={() => {
+            const errors = rowData.filter(row => row.error && row.error !== 'OK');
+            if (errors.length === 0) return;
+            const header = Object.keys(errors[0]) as (keyof typeof errors[0])[];
+            const rows = errors.map(row => header.map(h => (row as Partial<IList>)[h] ?? ''));
+            const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Ошибки');
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'errors.xlsx');
+          }}
+          disabled={rowData.filter(row => row.error && row.error !== 'OK').length === 0}
+        >
+          Экспорт ошибок в Excel
+        </button>
+        <AgGridReact 
+          rowData={rowData} 
+          columnDefs={columnDefs}  
+          rowClassRules={rowClassRules}
+          pagination={pagination}
+          paginationPageSize={paginationPageSize}
+          paginationPageSizeSelector={paginationPageSizeSelector}/>
+      </div>
     </>
   );
 };

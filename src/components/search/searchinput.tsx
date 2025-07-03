@@ -445,7 +445,7 @@ export default function SearchInput() {
       ) : msgError ? (
         <div className="text-destructive mt-4">{msgError}</div>
       ) : viewMode === "cards" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 mt-4">
           {filteredResults.map(item => (
             <MyCard 
               key={item.id} 
