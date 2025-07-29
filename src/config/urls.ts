@@ -42,7 +42,9 @@ export const gdx2_urls = {
   gdx2_url_stall_org_isp     : `${gdx2_backend_url}/stall/all/org_isp/unique`,
   gdx2_url_stall_scale     : `${gdx2_backend_url}/stall/all/scale/unique`,
   
-  
+  gdx2_url_sta_rgf_get_report_by_rgf            : `${gdx2_backend_url}/sta/rosg/`, 
+  gdx2_url_stl_rgf_get_report_by_rgf            : `${gdx2_backend_url}/stl/rosg/`, 
+  gdx2_url_stp_rgf_get_report_by_rgf            : `${gdx2_backend_url}/stp/rosg/`, 
 
 
 }

@@ -202,15 +202,15 @@ const DataTableReport = () => {
           </button>
         </div>
         <div style={{ height: 'calc(100% - 56px)' }}>
-          <AgGridReact 
-            rowData={rowData} 
-            columnDefs={columnDefs}  
-            rowClassRules={rowClassRules}
-            pagination={pagination}
-            paginationPageSize={paginationPageSize}
-            paginationPageSizeSelector={paginationPageSizeSelector}/>
+      <AgGridReact 
+        rowData={rowData} 
+        columnDefs={columnDefs}  
+        rowClassRules={rowClassRules}
+        pagination={pagination}
+        paginationPageSize={paginationPageSize}
+        paginationPageSizeSelector={paginationPageSizeSelector}/>
         </div>
-      </div>
+    </div>
     </>
   );
 };

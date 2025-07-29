@@ -158,12 +158,12 @@ const FilterMap = forwardRef<FilterMapRef, FilterMapProps>(function FilterMap(
       map.current?.addLayer(stp_Layer1 as AddLayerObject);
 
       // Добавляем обработчики событий
-      map.current?.on('mouseenter', layer_sta, mapMouseEnter);
-      map.current?.on('mouseenter', layer_stl, mapMouseEnter);
-      map.current?.on('mouseenter', layer_stp, mapMouseEnter);
-      map.current?.on('mouseleave', layer_sta, mapMouseLeave);
-      map.current?.on('mouseleave', layer_stl, mapMouseLeave);
-      map.current?.on('mouseleave', layer_stp, mapMouseLeave);
+    map.current?.on('mouseenter', layer_sta, mapMouseEnter);
+    map.current?.on('mouseenter', layer_stl, mapMouseEnter);
+    map.current?.on('mouseenter', layer_stp, mapMouseEnter);
+    map.current?.on('mouseleave', layer_sta, mapMouseLeave);
+    map.current?.on('mouseleave', layer_stl, mapMouseLeave);
+    map.current?.on('mouseleave', layer_stp, mapMouseLeave);
       map.current?.on('click', handleMapClick);
 
       isStyleLoaded.current = true;

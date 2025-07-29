@@ -19,8 +19,13 @@ export const FeatureTable = ({ feature, index }: FeatureTableProps) => {
     { label: 'Лист', key: 'nom_1000' },
     { label: 'Масштаб', key: 'scale' },
     { label: 'ТГФ', key: 'tgf' },
+    { label: 'инв. № РГФ', key: 'in_n_rosg' },
+    { label: 'инв. № ТГФ', key: 'in_n_tgf' },
+    { label: '№ РГФ', key: 'n_uk_rosg' },
+    { label: '№ ТГФ', key: 'n_uk_tgf' },
+    { label: '№', key: 'web_uk_id' }, 
     { label: 'Вид', key: 'vid_iz' },
-    { label: '№', key: 'web_uk_id' },
+    { label: '№', key: 'id' },
   ];
 
   return (

@@ -54,6 +54,8 @@ export function MapPanels() {
           popup.setLngLat(e.lngLat.wrap()).setHTML(tableFeature(features)).addTo( map?.current!);  
           if (e.features && e.features.length > 0) {
             setSelectedFeatures(e.features || []); // Всегда устанавливаем массив (даже пустой)
+            console.log(e.features)
+
           }
         }
   }

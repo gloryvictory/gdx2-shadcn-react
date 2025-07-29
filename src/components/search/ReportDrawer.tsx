@@ -16,6 +16,8 @@ import { gdx2_urls } from "@/config/urls";
 import { Spinner } from "@/components/ui/spinner";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+//import { AgGridReact } from 'ag-grid-react';
+import type { ColDef } from "ag-grid-community";
 
 type PropsDrawer = {
   open: boolean,
@@ -64,15 +66,69 @@ export function DescriptionItemWithMap({ title, content, item }: DescriptionItem
   const link_to_map_stl = `http://${window.location.host}/map2?stlrgf=${item?.rgf}`
   const link_to_map_stp = `http://${window.location.host}/map2?stprgf=${item?.rgf}`
 
+  const link_get_sta_report_by_rgf = `${gdx2_urls.gdx2_url_sta_rgf_get_report_by_rgf}${item?.rgf}`
+  const link_get_stl_report_by_rgf = `${gdx2_urls.gdx2_url_stl_rgf_get_report_by_rgf}${item?.rgf}`
+  const link_get_stp_report_by_rgf = `${gdx2_urls.gdx2_url_stp_rgf_get_report_by_rgf}${item?.rgf}`
+
+  const [tableData, setTableData] = useState<IReport[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   let linkTo: JSX.Element = <></>
+  let showBtn = false;
+  let btnLabel = '';
+  let fetchUrl = '';
 
   if(title.includes("На карте (Точки)")){
-    linkTo = <Link to={link_to_map_stp} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+    linkTo = <Link to={link_to_map_stp} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>
+    showBtn = !!item?.rgf;
+    btnLabel = 'Показать таблицу точек с карты';
+    fetchUrl = link_get_stp_report_by_rgf;
   } else if(title.includes("На карте (Линии)")){
-    linkTo = <Link to={link_to_map_stl} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+    linkTo = <Link to={link_to_map_stl} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>
+    showBtn = !!item?.rgf;
+    btnLabel = 'Показать таблицу линий с карты';
+    fetchUrl = link_get_stl_report_by_rgf;
   } else if(title.includes("На карте (Полигоны)")){
-    linkTo = <Link to={link_to_map_sta} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>    
+    linkTo = <Link to={link_to_map_sta} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "link", size: 'sm' })} > Показать на карте</Link>
+    showBtn = !!item?.rgf;
+    btnLabel = 'Показать таблицу полигонов с карты';
+    fetchUrl = link_get_sta_report_by_rgf;
   }
+
+  const columnDefs: ColDef[] = [
+    { headerName: "№", field: "id", filter: true, sortable: true, resizable: true },
+    { headerName: "Наименование", field: "report_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Автор", field: "author_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Год", field: "year_str", filter: true, sortable: true, resizable: true },
+    { headerName: "Субъект РФ", field: "subrf_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Лист карты", field: "list_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Партия", field: "part_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Площадь", field: "areaoil", filter: true, sortable: true, resizable: true },
+    { headerName: "Месторождение", field: "field", filter: true, sortable: true, resizable: true },
+    { headerName: "ЛУ", field: "lu", filter: true, sortable: true, resizable: true },
+    { headerName: "ПИ", field: "pi_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Источник", field: "fin_name", filter: true, sortable: true, resizable: true },
+    { headerName: "Организация", field: "org_name", filter: true, sortable: true, resizable: true },
+    { headerName: "ЗАПСИБНИИГГ", field: "zsniigg_report", filter: true, sortable: true, resizable: true },
+    { headerName: "Вид работ", field: "vid_rab", filter: true, sortable: true, resizable: true },
+    { headerName: "Примечание", field: "comments", filter: true, sortable: true, resizable: true },
+    { headerName: "ТГФ", field: "tgf", filter: true, sortable: true, resizable: true },
+    { headerName: "№ РГФ", field: "rgf", filter: true, sortable: true, resizable: true },
+  ];
+
+  const handleFetchTable = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await axios.get(fetchUrl);
+      setTableData(response.data?.data || []);
+    } catch (e: any) {
+      setError('Ошибка загрузки данных');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     content?.toString().length 
@@ -88,13 +144,43 @@ export function DescriptionItemWithMap({ title, content, item }: DescriptionItem
             ? 
             <>
               <span> {content} </span>
-              {linkTo}  
+              {linkTo}
+              {showBtn && (
+                <button onClick={handleFetchTable} className={buttonVariants({ variant: "outline", size: "sm" })} style={{marginLeft: 8}}>
+                  {btnLabel}
+                </button>
+              )}
             </>
             : content
           }
         </div>
       </div>
       <Separator />
+      {loading && <Spinner size="lg" className="bg-black dark:bg-white" />}
+      {error && <div className="text-red-500">{error}</div>}
+      {tableData && tableData.length > 0 && (
+        <div style={{ marginTop: 16 }}>
+          {tableData.map((row, idx) => (
+            <div key={row.id || idx} className="mb-2 p-2 border rounded bg-slate-50 dark:bg-slate-800">
+              <DescriptionItem title="Автор" content={row.author_name || row.avts} />
+              <DescriptionItem title="Отчет" content={row.report_name || row.name_otch} />
+              <DescriptionItem title="Организация" content={row.org_name || row.org_isp} />
+              <DescriptionItem title="Год начала" content={row.god_nach} />
+              <DescriptionItem title="Год окончания" content={row.god_end} />
+              <DescriptionItem title="Метод" content={row.method} />
+              <DescriptionItem title="Лист" content={row.list_name || row.nom_1000} />
+              <DescriptionItem title="Масштаб" content={row.scale} />
+              <DescriptionItem title="ТГФ" content={row.tgf} />
+              <DescriptionItem title="инв. № РГФ" content={row.in_n_rosg} />
+              <DescriptionItem title="инв. № ТГФ" content={row.in_n_tgf} />
+              <DescriptionItem title="№ РГФ" content={row.rgf || row.n_uk_rosg} />
+              <DescriptionItem title="№ ТГФ" content={row.n_uk_tgf} />
+              <DescriptionItem title="№" content={row.web_uk_id || row.id} />
+              <DescriptionItem title="Вид" content={row.vid_iz} />
+            </div>
+          ))}
+        </div>
+      )}
     </>
     : null
   )
@@ -186,7 +272,7 @@ export default function ReportDrawer({open, onClose, item }: PropsDrawer) {
           <SheetDescription>
             <Separator />
             <DescriptionItem title="ID" content={item?.id} />
-            <DescriptionItem title="Имя" content={item?.report_name} />
+            <DescriptionItem title="Отчет" content={item?.report_name} />
             <DescriptionItem title="Автор" content={item?.author_name} />
             <DescriptionItem title="Год" content={item?.year_str} />
             <DescriptionItem title="РГФ" content={item?.rgf} />

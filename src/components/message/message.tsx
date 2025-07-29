@@ -69,10 +69,10 @@ const Message: React.FC = () => {
             <CirclePlus className="h-5 w-5" />
             {!isModalOpen ? "Добавить пожелание" : "Ваше пожелание принято!"}
           </Button>
-        </div>
-
+      </div>
+      
         {/* Messages List */}
-        <TooltipProvider>
+      <TooltipProvider>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <ol className="space-y-4">
               {data && data?.data.map((item: any) => (
@@ -85,12 +85,12 @@ const Message: React.FC = () => {
                       {item.id}
                     </div>
                     <div className="flex-grow">
-                      <Tooltip>
-                        <TooltipTrigger>
+            <Tooltip>
+              <TooltipTrigger>
                           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
                             {item.name_ru}
                           </h3>
-                        </TooltipTrigger>
+              </TooltipTrigger>
                         <TooltipContent className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
                           <div className="space-y-2">
                             <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -103,13 +103,13 @@ const Message: React.FC = () => {
                               <span className="font-medium">Почта:</span> {item.email}
                             </p>
                           </div>
-                        </TooltipContent>
-                      </Tooltip>
+              </TooltipContent>
+            </Tooltip>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ol>
+            </li>
+          ))}
+        </ol>
           </div>
         </TooltipProvider>
       </div>

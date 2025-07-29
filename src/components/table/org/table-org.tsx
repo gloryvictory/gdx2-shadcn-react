@@ -111,14 +111,14 @@ const DataTableOrg = () => {
         >
           Экспорт ошибок в Excel
         </button>
-        <AgGridReact 
-          rowData={rowData} 
-          columnDefs={columnDefs}  
-          rowClassRules={rowClassRules}
-          pagination={pagination}
-          paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={paginationPageSizeSelector}/>
-      </div>
+      <AgGridReact 
+        rowData={rowData} 
+        columnDefs={columnDefs}  
+        rowClassRules={rowClassRules}
+        pagination={pagination}
+        paginationPageSize={paginationPageSize}
+        paginationPageSizeSelector={paginationPageSizeSelector}/>
+    </div>
     </>
   );
 };
