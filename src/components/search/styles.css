@@ -1,3 +1,16 @@
 .sm\:max-w-sm {
   max-width: 70rem;
 }
+
+.report-drawer-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.table-container {
+  margin-top: 1rem;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.button-margin {
+  margin-left: 0.5rem;
+}
